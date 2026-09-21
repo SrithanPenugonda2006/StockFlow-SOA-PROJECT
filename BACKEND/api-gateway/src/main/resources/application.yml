@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: auth-service
+            uri: ${AUTH_SERVICE_URL:http://omnistock-auth:8081}
+            predicates:
+              - Path=/api/auth/**
+          - id: admin-service
+            uri: ${AUTH_SERVICE_URL:http://omnistock-auth:8081}
+            predicates:
+              - Path=/api/admin/**
+          - id: product-service
+            uri: ${PRODUCT_SERVICE_URL:http://omnistock-product:8082}
+            predicates:
+              - Path=/api/products/**
+          - id: inventory-service
+            uri: ${INVENTORY_SERVICE_URL:http://omnistock-inventory:8083}
+            predicates:
+              - Path=/api/inventory/**
+          - id: order-service
+            uri: ${ORDER_SERVICE_URL:http://omnistock-order:8084}
+            predicates:
+              - Path=/api/orders/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+            allowedHeaders: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
+
+jwt:
+  secret: ${JWT_SECRET:omnistock-super-secret-key-must-be-at-least-256-bits-long-for-hmacsha256}

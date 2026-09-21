@@ -1,0 +1,104 @@
+# ==============================
+# Java / Maven
+# ==============================
+
+**/target/
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+
+# Maven generated files
+.mvn/timing.properties
+
+# ==============================
+# Spring Boot / Logs
+# ==============================
+
+**/*.log
+**/logs/
+
+# ==============================
+# Node / React / Vite
+# ==============================
+
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==============================
+# Environment / Secrets
+# ==============================
+
+.env
+.env.*
+!.env.example
+
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local Spring configuration
+**/application-local.properties
+**/application-local.yml
+**/application-dev-local.properties
+**/application-dev-local.yml
+
+# ==============================
+# IDE
+# ==============================
+
+.idea/
+**/.idea/
+*.iml
+.vscode/
+**/.vscode/
+
+.project
+.classpath
+.settings/
+
+# ==============================
+# macOS
+# ==============================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ==============================
+# Windows
+# ==============================
+
+Thumbs.db
+Desktop.ini
+
+# ==============================
+# Coverage / caches
+# ==============================
+
+coverage/
+.cache/
+.parcel-cache/
+.eslintcache
+
+# ==============================
+# Temporary files
+# ==============================
+
+*.tmp
+*.temp
+
+# ==============================
+# Local databases
+# ==============================
+
+*.db
+*.sqlite
+*.sqlite3
