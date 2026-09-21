@@ -163,30 +163,30 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-4 sm:py-6 px-3 sm:px-4 lg:px-8">
-      <div className="w-full max-w-[900px] bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 shadow-2xl text-left mx-auto my-auto box-border">
+    <div className="min-h-screen bg-[#F7F8FA] flex flex-col justify-center py-4 sm:py-6 px-3 sm:px-4 lg:px-8">
+      <div className="w-full max-w-[900px] bg-white border border-gray-200 rounded-2xl sm:rounded-2xl p-4 sm:p-6 lg:p-7 shadow-2xl text-left mx-auto my-auto box-border">
         {/* Top-Left Back to Login Button */}
         <div className="flex items-center justify-between mb-2">
           <Link
             to="/login"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white text-xs font-semibold transition-all duration-200 shadow-sm"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#F5F5F5] hover:bg-gray-100 border border-gray-200 text-gray-600 hover:text-gray-900 text-xs font-semibold transition-all duration-200 shadow-sm"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-indigo-400" />
+            <ArrowLeft className="w-3.5 h-3.5 text-[#666666]" />
             <span>Back to Login</span>
           </Link>
         </div>
 
         <div className="flex flex-col items-center text-center mb-3 sm:mb-4">
-          <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-md shadow-indigo-600/30 text-white mb-1.5">
+          <div className="p-2 sm:p-2.5 rounded-xl bg-[#111111] text-white mb-1.5">
             <Boxes className="w-7 h-7 sm:w-8 sm:h-8" />
           </div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white">Create Account</h1>
-          <p className="text-xs sm:text-sm text-slate-300 font-normal mt-0.5">Register for StockFlow SaaS Platform</p>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-gray-900">Create Account</h1>
+          <p className="text-xs sm:text-sm text-gray-600 font-normal mt-0.5">Register for StockFlow SaaS Platform</p>
         </div>
 
         {errorMessage && (
-          <div className="p-3 mb-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+          <div className="p-3 mb-3 rounded-xl bg-gray-100 border border-gray-800 text-gray-900 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-gray-900" />
             <span>{errorMessage}</span>
           </div>
         )}
@@ -230,15 +230,15 @@ export const RegisterPage: React.FC = () => {
             </div>
 
             {duplicateEmailError && (
-              <div className="p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-lg text-rose-300 text-xs flex items-center gap-2 font-medium mt-0.5">
-                <XCircle className="w-4 h-4 text-rose-400 shrink-0" aria-hidden="true" />
+              <div className="p-2.5 bg-gray-100 border border-gray-800 rounded-lg text-gray-900 text-xs flex items-center gap-2 font-medium mt-0.5">
+                <XCircle className="w-4 h-4 text-gray-900 shrink-0" aria-hidden="true" />
                 <span>{duplicateEmailError}</span>
               </div>
             )}
 
             {isEmailVerified && (
-              <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-300 text-xs flex items-center gap-2 font-semibold mt-0.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div className="p-2.5 bg-gray-100 border border-gray-800 rounded-lg text-gray-800 text-xs flex items-center gap-2 font-semibold mt-0.5">
+                <CheckCircle2 className="w-4 h-4 text-gray-900 shrink-0" />
                 <span>Email Verified ({verifiedEmail})</span>
               </div>
             )}
@@ -246,10 +246,10 @@ export const RegisterPage: React.FC = () => {
 
           {/* OTP Input & Verification Step */}
           {otpSent && !isEmailVerified && (
-            <div className="p-3 bg-slate-950/90 border border-indigo-500/30 rounded-xl flex flex-col gap-2">
+            <div className="p-3 bg-[#F7F8FA]/90 border border-[#D4D4D4]/30 rounded-xl flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs sm:text-sm">
-                <span className="font-bold text-indigo-300 flex items-center gap-2">
-                  <KeyRound className="w-4 h-4 text-indigo-400" /> Enter 6-Digit OTP Code
+                <span className="font-bold text-[#666666] flex items-center gap-2">
+                  <KeyRound className="w-4 h-4 text-[#666666]" /> Enter 6-Digit OTP Code
                 </span>
               </div>
 
@@ -260,7 +260,7 @@ export const RegisterPage: React.FC = () => {
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value)}
                   placeholder="000000"
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg text-center text-lg tracking-widest font-mono font-bold text-white p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-white border border-gray-200 rounded-lg text-center text-lg tracking-widest font-mono font-bold text-white p-2 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 />
                 <Button
                   type="button"
@@ -273,8 +273,8 @@ export const RegisterPage: React.FC = () => {
                   Verify OTP
                 </Button>
               </div>
-              <p className="text-xs text-slate-300 font-normal">
-                A 6-digit verification code was sent to <strong className="text-slate-300">{emailValue}</strong>.
+              <p className="text-xs text-gray-600 font-normal">
+                A 6-digit verification code was sent to <strong className="text-gray-600">{emailValue}</strong>.
               </p>
             </div>
           )}
@@ -294,8 +294,8 @@ export const RegisterPage: React.FC = () => {
 
             {/* Weak Password Block Notice */}
             {passwordValue.length > 0 && !isPasswordAllowed && (
-              <div className="p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2 font-medium">
-                <XCircle className="w-4 h-4 text-rose-400 shrink-0" aria-hidden="true" />
+              <div className="p-2.5 rounded-lg bg-gray-100 border border-gray-800 text-gray-900 text-xs flex items-center gap-2 font-medium">
+                <XCircle className="w-4 h-4 text-gray-900 shrink-0" aria-hidden="true" />
                 <div>
                   <span className="font-bold block">Password is too weak.</span>
                   <span>Please choose a Strong or Very Strong password.</span>
@@ -319,19 +319,19 @@ export const RegisterPage: React.FC = () => {
               <div
                 className={`p-2.5 rounded-lg border text-xs flex items-center gap-2 font-medium transition-all ${
                   isPasswordsMatching
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                    : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                    ? 'bg-gray-900/10 border-gray-900/30 text-gray-800'
+                    : 'bg-gray-900/10 border-gray-900/30 text-gray-900'
                 }`}
                 aria-live="polite"
               >
                 {isPasswordsMatching ? (
                   <>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />
+                    <CheckCircle2 className="w-4 h-4 text-gray-900 shrink-0" aria-hidden="true" />
                     <span>Passwords match</span>
                   </>
                 ) : (
                   <>
-                    <XCircle className="w-4 h-4 text-rose-400 shrink-0" aria-hidden="true" />
+                    <XCircle className="w-4 h-4 text-gray-900 shrink-0" aria-hidden="true" />
                     <span>Passwords do not match</span>
                   </>
                 )}
@@ -350,9 +350,9 @@ export const RegisterPage: React.FC = () => {
           </Button>
         </form>
 
-        <div className="mt-3 sm:mt-4 pt-3 border-t border-slate-800 text-center text-xs text-slate-300">
+        <div className="mt-3 sm:mt-4 pt-3 border-t border-gray-200 text-center text-xs text-gray-600">
           Already registered?{' '}
-          <Link to="/login" className="font-bold text-indigo-400 hover:text-indigo-300 transition-colors">
+          <Link to="/login" className="font-bold text-[#666666] hover:text-[#666666] transition-colors">
             Sign In Here
           </Link>
         </div>

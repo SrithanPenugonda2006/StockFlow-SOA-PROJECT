@@ -21,24 +21,24 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     const total = available + reserved;
 
     return (
-      <div className="bg-slate-900/95 border border-slate-700/80 rounded-xl p-3.5 shadow-2xl text-left min-w-[200px]">
-        <p className="text-xs font-bold text-slate-200 border-b border-slate-800 pb-1.5 mb-2">{label}</p>
+      <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xl text-left min-w-[200px]">
+        <p className="text-xs font-bold text-gray-900 border-b border-gray-100 pb-1.5 mb-2">{label}</p>
         <div className="space-y-1.5 text-xs">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+            <span className="flex items-center gap-1.5 text-gray-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-gray-900 inline-block" />
               Available Stock:
             </span>
-            <span className="font-semibold text-emerald-400">{available.toLocaleString()}</span>
+            <span className="font-semibold text-gray-900">{available.toLocaleString()}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block" />
+            <span className="flex items-center gap-1.5 text-gray-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#111111] inline-block" />
               Reserved Stock:
             </span>
-            <span className="font-semibold text-indigo-400">{reserved.toLocaleString()}</span>
+            <span className="font-semibold text-[#111111]">{reserved.toLocaleString()}</span>
           </div>
-          <div className="pt-1.5 border-t border-slate-800/80 flex items-center justify-between font-bold text-slate-100">
+          <div className="pt-1.5 border-t border-gray-100 flex items-center justify-between font-bold text-gray-900">
             <span>Total Stock:</span>
             <span>{total.toLocaleString()}</span>
           </div>
@@ -56,32 +56,32 @@ export const StockByWarehouseChart: React.FC<StockByWarehouseChartProps> = ({ da
       subtitle="Real-time available vs reserved inventory distribution per facility"
     >
       {isLoading ? (
-        <div className="h-72 flex items-center justify-center text-slate-500 text-xs">Loading warehouse stock data...</div>
+        <div className="h-72 flex items-center justify-center text-gray-400 text-xs font-medium">Loading warehouse stock data...</div>
       ) : data.length > 0 ? (
         <div className="h-72 pt-4">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 15, right: 10, left: -15, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#EEF0F3" vertical={false} />
               <XAxis
                 dataKey="name"
-                stroke="#64748b"
+                stroke="#9CA3AF"
                 fontSize={12}
                 tickLine={false}
-                axisLine={{ stroke: '#334155' }}
+                axisLine={{ stroke: '#E5E7EB' }}
               />
-              <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(51, 65, 85, 0.25)' }} />
+              <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(243, 244, 246, 0.6)' }} />
               <Legend
                 wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
-                formatter={(value) => <span className="text-slate-300 font-medium capitalize">{value} Stock</span>}
+                formatter={(value) => <span className="text-gray-700 font-medium capitalize">{value} Stock</span>}
               />
-              <Bar dataKey="available" name="Available" stackId="a" fill="#10b981" maxBarSize={48} />
-              <Bar dataKey="reserved" name="Reserved" stackId="a" fill="#6366f1" radius={[6, 6, 0, 0]} maxBarSize={48} />
+              <Bar dataKey="available" name="Available" stackId="a" fill="#000000" maxBarSize={48} />
+              <Bar dataKey="reserved" name="Reserved" stackId="a" fill="#737373" radius={[6, 6, 0, 0]} maxBarSize={48} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       ) : (
-        <div className="h-72 flex items-center justify-center text-slate-500 text-xs">
+        <div className="h-72 flex items-center justify-center text-gray-400 text-xs font-medium">
           No warehouse stock records available to display.
         </div>
       )}

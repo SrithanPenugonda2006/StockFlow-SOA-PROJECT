@@ -7,7 +7,7 @@ export const productApi = {
     const response = await apiClient.get<PageResponse<Product>>('/api/products', {
       params: {
         page: params?.page || 0,
-        size: params?.size || 10,
+        size: params?.size || 5,
         name: params?.name || undefined,
         category: params?.category || undefined,
       },

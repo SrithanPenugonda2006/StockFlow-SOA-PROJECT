@@ -55,7 +55,7 @@ export const ManagerDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-500 text-sm animate-pulse max-w-5xl mx-auto">
+      <div className="p-8 text-center text-gray-400 text-sm animate-pulse max-w-5xl mx-auto">
         Loading manager profile details...
       </div>
     );
@@ -68,7 +68,7 @@ export const ManagerDetailPage: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           <span>Back to All Managers</span>
         </Button>
-        <div className="p-6 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center gap-3">
+        <div className="p-6 rounded-xl bg-gray-100 border border-gray-800 text-gray-900 flex items-center gap-3">
           <AlertCircle className="w-5 h-5 shrink-0" />
           <span>{error || 'Manager profile not found.'}</span>
         </div>
@@ -109,57 +109,57 @@ export const ManagerDetailPage: React.FC = () => {
         {/* Profile Card */}
         <Card title="Manager Profile" className="md:col-span-1">
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
-              <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+            <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
+              <div className="p-3 rounded-2xl bg-gray-100 border border-gray-600 text-gray-700">
                 <UserCheck className="w-8 h-8" />
               </div>
               <div>
-                <span className="font-bold text-slate-100 block text-base">{manager.fullName}</span>
-                <span className="text-xs text-slate-400 font-mono">@{manager.username}</span>
+                <span className="font-bold text-gray-900 block text-base">{manager.fullName}</span>
+                <span className="text-xs text-gray-500 font-mono">@{manager.username}</span>
               </div>
             </div>
 
             <div className="flex flex-col gap-3 text-xs">
               <div className="flex justify-between items-center">
-                <span className="text-slate-400 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-amber-400" />
+                <span className="text-gray-500 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-gray-700" />
                   Role
                 </span>
                 <Badge variant="warning">{manager.role}</Badge>
               </div>
 
               <div className="flex justify-between items-center">
-                <span className="text-slate-400 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span className="text-gray-500 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-gray-900" />
                   Status
                 </span>
                 <Badge variant={manager.status === 'ACTIVE' ? 'success' : 'danger'}>{manager.status}</Badge>
               </div>
 
-              <div className="flex justify-between items-center pt-2 border-t border-slate-800">
-                <span className="text-slate-400 flex items-center gap-1.5">
-                  <Mail className="w-4 h-4 text-indigo-400" />
+              <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                <span className="text-gray-500 flex items-center gap-1.5">
+                  <Mail className="w-4 h-4 text-[#666666]" />
                   Email
                 </span>
-                <span className="text-slate-200 font-mono">{manager.email}</span>
+                <span className="text-gray-800 font-mono">{manager.email}</span>
               </div>
 
               {manager.phone && (
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    <Phone className="w-4 h-4 text-indigo-400" />
+                  <span className="text-gray-500 flex items-center gap-1.5">
+                    <Phone className="w-4 h-4 text-[#666666]" />
                     Phone
                   </span>
-                  <span className="text-slate-200">{manager.phone}</span>
+                  <span className="text-gray-800">{manager.phone}</span>
                 </div>
               )}
 
               <div className="flex justify-between items-center">
-                <span className="text-slate-400 flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-slate-400" />
+                <span className="text-gray-500 flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4 text-gray-500" />
                   Created
                 </span>
-                <span className="text-slate-300 font-mono">{manager.createdAt}</span>
+                <span className="text-gray-600 font-mono">{manager.createdAt}</span>
               </div>
             </div>
           </div>
@@ -167,7 +167,7 @@ export const ManagerDetailPage: React.FC = () => {
 
         {/* Warehouse Access Card */}
         <Card title="Assigned Warehouse Access" className="md:col-span-2">
-          <p className="text-xs text-slate-400 mb-4">
+          <p className="text-xs text-gray-500 mb-4">
             This manager is authorized to access and operate on the following warehouse locations:
           </p>
 
@@ -176,19 +176,19 @@ export const ManagerDetailPage: React.FC = () => {
               manager.assignedWarehouses.map((w) => (
                 <div
                   key={w.warehouseId}
-                  className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3"
+                  className="p-4 rounded-xl bg-[#F7F8FA] border border-gray-200 flex items-start gap-3"
                 >
-                  <div className="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 shrink-0">
+                  <div className="p-2.5 rounded-lg bg-[#F5F5F5] border border-[#E5E5E5] text-[#666666] shrink-0">
                     <WarehouseIcon className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="font-bold text-sm text-slate-100 block">{w.warehouseName}</span>
-                    <span className="text-xs text-indigo-400 mt-0.5 block font-mono">ID: WAREHOUSE-{w.warehouseId}</span>
+                    <span className="font-bold text-sm text-gray-900 block">{w.warehouseName}</span>
+                    <span className="text-xs text-[#666666] mt-0.5 block font-mono">ID: WAREHOUSE-{w.warehouseId}</span>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-500 italic">
+              <div className="p-4 rounded-xl bg-[#F7F8FA] border border-gray-200 text-xs text-gray-400 italic">
                 No warehouses currently assigned.
               </div>
             )}
@@ -201,7 +201,7 @@ export const ManagerDetailPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 uppercase font-semibold">
+              <tr className="border-b border-gray-200 text-gray-500 uppercase font-semibold">
                 <th className="py-2.5 px-3">Module</th>
                 <th className="py-2.5 px-3">Scope Description</th>
                 <th className="py-2.5 px-3 text-center">View</th>
@@ -209,28 +209,28 @@ export const ManagerDetailPage: React.FC = () => {
                 <th className="py-2.5 px-3 text-center">Edit</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-gray-100/60">
               {permissions.map((p) => (
-                <tr key={p.module} className="hover:bg-slate-900/50">
-                  <td className="py-3 px-3 font-bold text-slate-200">{p.module}</td>
-                  <td className="py-3 px-3 text-slate-400">{p.desc}</td>
+                <tr key={p.module} className="hover:bg-white/50">
+                  <td className="py-3 px-3 font-bold text-gray-800">{p.module}</td>
+                  <td className="py-3 px-3 text-gray-500">{p.desc}</td>
                   <td className="py-3 px-3 text-center">
                     {p.view ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto" />
+                      <CheckCircle2 className="w-4 h-4 text-gray-900 mx-auto" />
                     ) : (
                       <XCircle className="w-4 h-4 text-slate-600 mx-auto" />
                     )}
                   </td>
                   <td className="py-3 px-3 text-center">
                     {p.create ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto" />
+                      <CheckCircle2 className="w-4 h-4 text-gray-900 mx-auto" />
                     ) : (
                       <XCircle className="w-4 h-4 text-slate-600 mx-auto" />
                     )}
                   </td>
                   <td className="py-3 px-3 text-center">
                     {p.edit ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto" />
+                      <CheckCircle2 className="w-4 h-4 text-gray-900 mx-auto" />
                     ) : (
                       <XCircle className="w-4 h-4 text-slate-600 mx-auto" />
                     )}
@@ -245,19 +245,19 @@ export const ManagerDetailPage: React.FC = () => {
       {/* Manager Activity / Audit History */}
       <Card title="Recent Manager Activity & Audit History">
         {activity.length === 0 ? (
-          <div className="p-6 text-center text-xs text-slate-500 flex flex-col items-center gap-2">
+          <div className="p-6 text-center text-xs text-gray-400 flex flex-col items-center gap-2">
             <History className="w-6 h-6 text-slate-600" />
             <span>No logged audit activity recorded for this manager account yet.</span>
           </div>
         ) : (
-          <div className="flex flex-col divide-y divide-slate-800">
+          <div className="flex flex-col divide-y divide-gray-100">
             {activity.map((act) => (
               <div key={act.id} className="py-3 flex items-center justify-between text-xs">
                 <div>
-                  <span className="font-bold text-indigo-400">{act.action}</span>
-                  <span className="text-slate-300 ml-2">{act.details}</span>
+                  <span className="font-bold text-[#666666]">{act.action}</span>
+                  <span className="text-gray-600 ml-2">{act.details}</span>
                 </div>
-                <span className="text-slate-500 font-mono">{act.createdAt}</span>
+                <span className="text-gray-400 font-mono">{act.createdAt}</span>
               </div>
             ))}
           </div>

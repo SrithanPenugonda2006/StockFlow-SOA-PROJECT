@@ -53,8 +53,8 @@ export const ProductDetailPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="p-12 text-center text-slate-400 flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+      <div className="p-12 text-center text-gray-500 flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-4 border-[#D4D4D4] border-t-transparent rounded-full animate-spin" />
         <span>Loading product specs & multi-warehouse inventory breakdown...</span>
       </div>
     );
@@ -62,7 +62,7 @@ export const ProductDetailPage: React.FC = () => {
 
   if (!product) {
     return (
-      <div className="p-12 text-center text-slate-400">
+      <div className="p-12 text-center text-gray-500">
         <p>Product not found.</p>
         <Button onClick={() => navigate('/customer/products')} className="mt-4">
           Return to Products Catalog
@@ -88,35 +88,35 @@ export const ProductDetailPage: React.FC = () => {
     <div className="flex flex-col gap-6 text-left max-w-5xl mx-auto">
       <button
         onClick={() => navigate('/customer/products')}
-        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors w-fit"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-800 transition-colors w-fit"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Products Catalog
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left main info */}
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white border border-gray-200 rounded-3xl p-8 shadow-2xl flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl">
+              <div className="p-3 bg-[#F5F5F5] border border-[#E5E5E5] text-[#666666] rounded-2xl">
                 <Package className="w-8 h-8" />
               </div>
               <div>
                 <Badge variant="purple" size="sm">
                   {product.category}
                 </Badge>
-                <h1 className="text-2xl font-black text-white mt-1">{product.name}</h1>
-                <span className="text-xs font-mono text-slate-400">SKU: {product.sku}</span>
+                <h1 className="text-2xl font-black text-gray-500 mt-1">{product.name}</h1>
+                <span className="text-xs font-mono text-gray-500">SKU: {product.sku}</span>
               </div>
             </div>
 
-            <p className="text-sm text-slate-300 leading-relaxed mt-6">{product.description}</p>
+            <p className="text-sm text-gray-600 leading-relaxed mt-6">{product.description}</p>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-slate-800 flex items-center justify-between">
+          <div className="mt-8 pt-6 border-t border-gray-200 flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold uppercase text-slate-500 block">Unit Price</span>
-              <span className="text-3xl font-black text-emerald-400">{formatCurrency(product.price)}</span>
+              <span className="text-xs font-bold uppercase text-gray-400 block">Unit Price</span>
+              <span className="text-3xl font-black text-gray-900">{formatCurrency(product.price)}</span>
             </div>
 
             <Button
@@ -132,40 +132,40 @@ export const ProductDetailPage: React.FC = () => {
         </div>
 
         {/* Right Multi-Warehouse Breakdown */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-slate-800">
-            <WarehouseIcon className="w-5 h-5 text-indigo-400" />
-            <h3 className="text-base font-bold text-slate-100">Multi-Warehouse Stock</h3>
+        <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-2xl flex flex-col gap-4">
+          <div className="flex items-center gap-2 pb-3 border-b border-gray-200">
+            <WarehouseIcon className="w-5 h-5 text-[#666666]" />
+            <h3 className="text-base font-bold text-gray-900">Multi-Warehouse Stock</h3>
           </div>
 
-          <div className="divide-y divide-slate-800/80">
+          <div className="divide-y divide-gray-100/80">
             {inventories.length > 0 ? (
               inventories.map((inv) => {
                 const wh = warehouses[inv.warehouseId];
                 return (
                   <div key={inv.id} className="py-3 flex items-center justify-between">
                     <div>
-                      <span className="font-bold text-slate-200 text-xs block">
+                      <span className="font-bold text-gray-800 text-xs block">
                         {wh ? wh.name : `Warehouse #${inv.warehouseId}`}
                       </span>
-                      <span className="text-[10px] text-slate-500">{wh ? wh.location : 'Facility'}</span>
+                      <span className="text-[10px] text-gray-400">{wh ? wh.location : 'Facility'}</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-sm font-black text-emerald-400">{inv.availableQuantity}</span>
-                      <span className="text-[10px] text-slate-500 block">Available</span>
+                      <span className="text-sm font-black text-gray-900">{inv.availableQuantity}</span>
+                      <span className="text-[10px] text-gray-400 block">Available</span>
                     </div>
                   </div>
                 );
               })
             ) : (
-              <div className="py-6 text-center text-xs text-slate-500">
+              <div className="py-6 text-center text-xs text-gray-400">
                 No inventory records initialized across physical warehouses yet.
               </div>
             )}
           </div>
 
-          <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-400 flex items-center gap-2.5 mt-auto">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="p-3.5 bg-[#F7F8FA] rounded-xl border border-gray-200 text-xs text-gray-500 flex items-center gap-2.5 mt-auto">
+            <ShieldCheck className="w-4 h-4 text-gray-900 shrink-0" />
             <span>Pessimistic lock stock allocation guarantees exact availability.</span>
           </div>
         </div>

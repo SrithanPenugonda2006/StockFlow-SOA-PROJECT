@@ -16,6 +16,8 @@ export const UsersPage: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('ALL');
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
 
   // Role change modal
   const [roleModalUser, setRoleModalUser] = useState<AdminUser | null>(null);
@@ -84,6 +86,10 @@ export const UsersPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, roleFilter]);
+
   const filteredUsers = users.filter((u) => {
     const term = searchTerm.toLowerCase();
     const matchesSearch =
@@ -95,20 +101,23 @@ export const UsersPage: React.FC = () => {
     return matchesSearch && matchesRole;
   });
 
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + pageSize);
+
   const columns: Column<AdminUser>[] = [
     {
       header: 'User Account',
       cell: (row) => (
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+          <div className="p-2.5 rounded-xl bg-[#F5F5F5] border border-[#E5E5E5] text-[#666666]">
             <User className="w-4 h-4" />
           </div>
           <div>
-            <span className="font-bold text-slate-100 text-sm block">
+            <span className="font-bold text-gray-900 text-sm block">
               {row.fullName || row.username}
             </span>
-            <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-              <Mail className="w-3 h-3 text-slate-500" />
+            <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+              <Mail className="w-3 h-3 text-gray-400" />
               {row.email}
             </span>
           </div>
@@ -146,7 +155,7 @@ export const UsersPage: React.FC = () => {
             }}
             title="Change Role"
           >
-            <ShieldCheck className="w-4 h-4 text-slate-400 hover:text-amber-400" />
+            <ShieldCheck className="w-4 h-4 text-gray-500 hover:text-gray-700" />
           </Button>
           <Button
             size="sm"
@@ -157,8 +166,8 @@ export const UsersPage: React.FC = () => {
             <Power
               className={`w-4 h-4 ${
                 row.status === 'ACTIVE'
-                  ? 'text-slate-400 hover:text-rose-400'
-                  : 'text-slate-400 hover:text-emerald-400'
+                  ? 'text-gray-500 hover:text-gray-900'
+                  : 'text-gray-500 hover:text-gray-900'
               }`}
             />
           </Button>
@@ -169,7 +178,7 @@ export const UsersPage: React.FC = () => {
               onClick={() => handleDeleteUser(row)}
               title="Delete Account"
             >
-              <Trash2 className="w-4 h-4 text-slate-400 hover:text-rose-500" />
+              <Trash2 className="w-4 h-4 text-gray-500 hover:text-gray-900" />
             </Button>
           )}
         </div>
@@ -185,14 +194,14 @@ export const UsersPage: React.FC = () => {
       />
 
       {toastMsg && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-3">
+        <div className="p-4 rounded-xl bg-gray-100 border border-gray-800 text-gray-900 text-sm flex items-center gap-3">
           <CheckCircle2 className="w-5 h-5 shrink-0" />
           <span>{toastMsg}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm flex items-center gap-3">
+        <div className="p-4 rounded-xl bg-gray-100 border border-gray-800 text-gray-900 text-sm flex items-center gap-3">
           <AlertCircle className="w-5 h-5 shrink-0" />
           <span>{error}</span>
         </div>
@@ -202,23 +211,23 @@ export const UsersPage: React.FC = () => {
       <Card className="p-4">
         <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
           <div className="relative w-full sm:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search users by name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full bg-[#F7F8FA] border border-gray-200 rounded-xl pl-10 pr-4 py-2 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#D4D4D4] transition-colors"
             />
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Filter className="w-4 h-4 text-slate-400" />
-            <span className="text-xs text-slate-400 font-medium">Role:</span>
+            <Filter className="w-4 h-4 text-gray-500" />
+            <span className="text-xs text-gray-500 font-medium">Role:</span>
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+              className="bg-[#F7F8FA] border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-[#D4D4D4]"
             >
               <option value="ALL">All Roles</option>
               <option value="ADMIN">ADMIN</option>
@@ -232,11 +241,11 @@ export const UsersPage: React.FC = () => {
       {/* Users Table */}
       <Card title={`System Users (${filteredUsers.length})`}>
         {loading ? (
-          <div className="p-8 text-center text-slate-500 text-sm animate-pulse">
+          <div className="p-8 text-center text-gray-400 text-sm animate-pulse">
             Fetching platform users from Gateway...
           </div>
         ) : (
-          <DataTable columns={columns} data={filteredUsers} keyExtractor={(item) => item.id.toString()} />
+          <DataTable columns={columns} data={paginatedUsers} keyExtractor={(item) => item.id.toString()} pagination={{ currentPage, totalItems: filteredUsers.length, pageSize, onPageChange: setCurrentPage }} />
         )}
       </Card>
 
@@ -248,16 +257,16 @@ export const UsersPage: React.FC = () => {
           title={`Change Role for ${roleModalUser.username}`}
         >
           <form onSubmit={handleRoleSave} className="flex flex-col gap-4 text-left">
-            <p className="text-xs text-slate-400">
-              Select the system access level for user <strong className="text-slate-200">@{roleModalUser.username}</strong>:
+            <p className="text-xs text-gray-500">
+              Select the system access level for user <strong className="text-gray-800">@{roleModalUser.username}</strong>:
             </p>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1">Select Role *</label>
+              <label className="block text-xs font-bold text-gray-600 mb-1">Select Role *</label>
               <select
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value as any)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-[#F7F8FA] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#D4D4D4]"
               >
                 <option value="CUSTOMER">CUSTOMER - Storefront & Order Placement</option>
                 <option value="MANAGER">MANAGER - Operational Warehouse Management</option>
@@ -265,7 +274,7 @@ export const UsersPage: React.FC = () => {
               </select>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-2 border-t border-gray-200">
               <Button type="button" variant="outline" onClick={() => setRoleModalUser(null)}>
                 Cancel
               </Button>

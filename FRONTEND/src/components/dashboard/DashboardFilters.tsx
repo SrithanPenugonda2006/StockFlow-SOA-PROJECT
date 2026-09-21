@@ -29,26 +29,26 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   isFiltered,
 }) => {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
-      <div className="flex items-center gap-2 text-slate-300 font-semibold text-sm">
-        <Filter className="w-4 h-4 text-indigo-400" />
+    <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xs">
+      <div className="flex items-center gap-2 text-gray-900 font-bold text-sm">
+        <Filter className="w-4 h-4 text-[#111111]" />
         <span>Analytics Controls</span>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
         {/* Warehouse Filter */}
-        <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-lg px-3 py-1.5 text-xs">
-          <Building2 className="w-3.5 h-3.5 text-slate-400" />
+        <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-xs">
+          <Building2 className="w-3.5 h-3.5 text-gray-400" />
           <select
             value={selectedWarehouseId}
             onChange={(e) => onWarehouseChange(e.target.value)}
-            className="bg-transparent text-slate-200 focus:outline-none cursor-pointer pr-1"
+            className="bg-transparent text-gray-900 font-semibold focus:outline-none cursor-pointer pr-1"
           >
-            <option value="ALL" className="bg-slate-900 text-slate-200">
+            <option value="ALL" className="bg-white text-gray-900">
               All Warehouses
             </option>
             {warehouses.map((w) => (
-              <option key={w.id} value={w.id.toString()} className="bg-slate-900 text-slate-200">
+              <option key={w.id} value={w.id.toString()} className="bg-white text-gray-900">
                 {w.name}
               </option>
             ))}
@@ -56,18 +56,18 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
         </div>
 
         {/* Product Filter */}
-        <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-lg px-3 py-1.5 text-xs">
-          <Package className="w-3.5 h-3.5 text-slate-400" />
+        <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-xs">
+          <Package className="w-3.5 h-3.5 text-gray-400" />
           <select
             value={selectedProductId}
             onChange={(e) => onProductChange(e.target.value)}
-            className="bg-transparent text-slate-200 focus:outline-none cursor-pointer pr-1 max-w-[180px] truncate"
+            className="bg-transparent text-gray-900 font-semibold focus:outline-none cursor-pointer pr-1 max-w-[180px] truncate"
           >
-            <option value="ALL" className="bg-slate-900 text-slate-200">
+            <option value="ALL" className="bg-white text-gray-900">
               All Products
             </option>
             {products.map((p) => (
-              <option key={p.id} value={p.id.toString()} className="bg-slate-900 text-slate-200">
+              <option key={p.id} value={p.id.toString()} className="bg-white text-gray-900">
                 {p.name}
               </option>
             ))}
@@ -75,20 +75,20 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
         </div>
 
         {/* Time Range Filter */}
-        <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-lg px-3 py-1.5 text-xs">
-          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+        <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-xs">
+          <Calendar className="w-3.5 h-3.5 text-gray-400" />
           <select
             value={timeRange}
             onChange={(e) => onTimeRangeChange(e.target.value)}
-            className="bg-transparent text-slate-200 focus:outline-none cursor-pointer pr-1"
+            className="bg-transparent text-gray-900 font-semibold focus:outline-none cursor-pointer pr-1"
           >
-            <option value="7D" className="bg-slate-900 text-slate-200">
+            <option value="7D" className="bg-white text-gray-900">
               Last 7 Days
             </option>
-            <option value="30D" className="bg-slate-900 text-slate-200">
+            <option value="30D" className="bg-white text-gray-900">
               Last 30 Days
             </option>
-            <option value="90D" className="bg-slate-900 text-slate-200">
+            <option value="90D" className="bg-white text-gray-900">
               Last 90 Days
             </option>
           </select>
@@ -98,7 +98,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
         {isFiltered && (
           <button
             onClick={onReset}
-            className="flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition-colors px-2 py-1"
+            className="flex items-center gap-1.5 text-xs font-semibold text-[#111111] hover:text-[#111111] transition-colors px-2 py-1 cursor-pointer"
           >
             <RefreshCw className="w-3 h-3" />
             <span>Reset Filters</span>

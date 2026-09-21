@@ -34,7 +34,7 @@ export const TransactionsPage: React.FC = () => {
       setTotalPages(res.totalPages || 1);
       setTotalElements(res.totalElements || 0);
 
-      const prods = await productApi.getProducts({ page: 0, size: 100 });
+      const prods = await productApi.getProducts({ page: 0, size: 50 });
       const pMap: Record<number, Product> = {};
       (prods.content || []).forEach((p) => {
         pMap[p.id] = p;
@@ -61,8 +61,8 @@ export const TransactionsPage: React.FC = () => {
   const columns: Column<InventoryTransaction>[] = [
     {
       header: 'Timestamp',
-      accessorKey: 'createdAt',
-      cell: (row) => <span className="text-xs text-slate-400 font-mono">{formatDate(row.createdAt)}</span>,
+      accessorKey: 'timestamp',
+      cell: (row) => <span className="text-xs text-gray-500 font-mono">{formatDate(row.createdAt || row.timestamp)}</span>,
     },
     {
       header: 'Transaction Type',
@@ -72,7 +72,12 @@ export const TransactionsPage: React.FC = () => {
             return <Badge variant="success">RESTOCK</Badge>;
           case 'RESERVATION':
             return <Badge variant="warning">RESERVATION</Badge>;
-          case 'CONFIRMATION':
+          case 'DISPATCH':
+            return <Badge variant="warning">DISPATCH</Badge>;
+          case 'TRANSFER_IN':
+            return <Badge variant="success">TRANSFER IN</Badge>;
+          case 'TRANSFER_OUT':
+            return <Badge variant="danger">TRANSFER OUT</Badge>;
             return <Badge variant="info">CONFIRMATION</Badge>;
           case 'RECONCILIATION':
             return <Badge variant="purple">RECONCILIATION</Badge>;
@@ -89,8 +94,8 @@ export const TransactionsPage: React.FC = () => {
         const prod = productMap[row.productId];
         return (
           <div>
-            <span className="font-bold text-slate-100 block">{prod ? prod.name : `Product #${row.productId}`}</span>
-            <span className="text-xs text-slate-400 font-mono">SKU: {prod ? prod.sku : 'N/A'}</span>
+            <span className="font-bold text-gray-900 block">{prod ? prod.name : `Product #${row.productId}`}</span>
+            <span className="text-xs text-gray-500 font-mono">SKU: {prod ? prod.sku : 'N/A'}</span>
           </div>
         );
       },
@@ -99,7 +104,7 @@ export const TransactionsPage: React.FC = () => {
       header: 'Warehouse',
       cell: (row) => {
         const wh = warehouseMap[row.warehouseId];
-        return <span className="font-medium text-slate-300">{wh ? wh.name : `Warehouse #${row.warehouseId}`}</span>;
+        return <span className="font-medium text-gray-600">{wh ? wh.name : `Warehouse #${row.warehouseId}`}</span>;
       },
     },
     {
@@ -107,14 +112,14 @@ export const TransactionsPage: React.FC = () => {
       cell: (row) => (
         <span
           className={`font-bold ${
-            row.quantityChange > 0
-              ? 'text-emerald-400'
-              : row.quantityChange < 0
-              ? 'text-rose-400'
-              : 'text-slate-400'
+            (row.quantityChange ?? row.quantity ?? 0) > 0
+              ? 'text-gray-900'
+              : (row.quantityChange ?? row.quantity ?? 0) < 0
+              ? 'text-gray-900'
+              : 'text-gray-500'
           }`}
         >
-          {row.quantityChange > 0 ? `+${row.quantityChange}` : row.quantityChange}
+          {(row.quantityChange ?? row.quantity ?? 0) > 0 ? `+${row.quantityChange ?? row.quantity}` : (row.quantityChange ?? row.quantity)}
         </span>
       ),
     },
@@ -122,8 +127,8 @@ export const TransactionsPage: React.FC = () => {
       header: 'Reason / Performed By',
       cell: (row) => (
         <div>
-          <span className="text-xs font-semibold text-slate-300 block">{row.reason}</span>
-          <span className="text-[10px] text-slate-500 font-mono">By: {row.performedBy || 'System'}</span>
+          <span className="text-xs font-semibold text-gray-600 block">{row.reason}</span>
+          <span className="text-[10px] text-gray-400 font-mono">By: {row.performedBy || 'System'}</span>
         </div>
       ),
     },
@@ -153,7 +158,7 @@ export const TransactionsPage: React.FC = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         totalElements={totalElements}
-        pageSize={10}
+        pageSize={5} totalItems={totalElements} isZeroBased={true}
         onPageChange={(p) => setCurrentPage(p)}
       />
     </div>

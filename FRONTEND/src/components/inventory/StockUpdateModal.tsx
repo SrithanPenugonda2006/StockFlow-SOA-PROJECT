@@ -65,18 +65,18 @@ export const StockUpdateModal: React.FC<StockUpdateModalProps> = ({
       subtitle={`Adjust stock level for Product #${inventoryItem.productId} in Warehouse #${inventoryItem.warehouseId}`}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4">
-        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-between text-xs">
+        <div className="bg-[#F7F8FA] p-4 rounded-xl border border-gray-200 flex justify-between text-xs">
           <div>
-            <span className="text-slate-500 block">Current Total Stock</span>
-            <span className="text-lg font-bold text-slate-100">{inventoryItem.quantity}</span>
+            <span className="text-gray-400 block">Current Total Stock</span>
+            <span className="text-lg font-bold text-gray-900">{inventoryItem.quantity}</span>
           </div>
           <div>
-            <span className="text-slate-500 block">Reserved</span>
-            <span className="text-lg font-bold text-amber-400">{inventoryItem.reservedQuantity}</span>
+            <span className="text-gray-400 block">Reserved</span>
+            <span className="text-lg font-bold text-gray-700">{inventoryItem.reservedQuantity}</span>
           </div>
           <div>
-            <span className="text-slate-500 block">Available</span>
-            <span className="text-lg font-bold text-emerald-400">{inventoryItem.availableQuantity}</span>
+            <span className="text-gray-400 block">Available</span>
+            <span className="text-lg font-bold text-gray-900">{inventoryItem.availableQuantity}</span>
           </div>
         </div>
 
@@ -88,7 +88,7 @@ export const StockUpdateModal: React.FC<StockUpdateModalProps> = ({
           error={errors.quantity?.message}
         />
 
-        <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
+        <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-200">
           <Button variant="secondary" type="button" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>

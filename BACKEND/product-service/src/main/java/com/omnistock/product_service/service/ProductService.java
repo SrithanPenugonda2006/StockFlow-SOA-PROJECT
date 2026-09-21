@@ -16,15 +16,23 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public ProductDTO createProduct(ProductDTO dto) {
-        if (productRepository.existsBySku(dto.getSku())) {
-            throw new IllegalArgumentException("SKU already exists: " + dto.getSku());
+        String trimmedSku = dto.getSku() != null ? dto.getSku().trim() : null;
+        if (trimmedSku != null && productRepository.existsBySku(trimmedSku)) {
+            throw new IllegalArgumentException("SKU already exists: " + trimmedSku);
+        }
+
+        String trimmedBarcode = dto.getBarcode() != null ? dto.getBarcode().trim() : null;
+        if (trimmedBarcode != null && !trimmedBarcode.isEmpty() && productRepository.existsByBarcode(trimmedBarcode)) {
+            throw new IllegalArgumentException("Barcode already exists: " + trimmedBarcode);
         }
 
         Product product = new Product();
         mapDtoToEntity(dto, product);
         
         product = productRepository.save(product);
-        return mapEntityToDto(product);
+        ProductDTO resultDto = mapEntityToDto(product);
+        resultDto.setInitialStock(dto.getInitialStock() != null ? dto.getInitialStock() : 0);
+        return resultDto;
     }
 
     public Page<ProductDTO> getProducts(String name, String category, Pageable pageable) {
@@ -57,8 +65,16 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
-        if (!product.getSku().equals(dto.getSku()) && productRepository.existsBySku(dto.getSku())) {
-            throw new IllegalArgumentException("SKU already exists: " + dto.getSku());
+        String trimmedSku = dto.getSku() != null ? dto.getSku().trim() : null;
+        if (trimmedSku != null && !trimmedSku.equals(product.getSku()) && productRepository.existsBySku(trimmedSku)) {
+            throw new IllegalArgumentException("SKU already exists: " + trimmedSku);
+        }
+
+        String trimmedBarcode = dto.getBarcode() != null ? dto.getBarcode().trim() : null;
+        if (trimmedBarcode != null && !trimmedBarcode.isEmpty()
+                && !trimmedBarcode.equals(product.getBarcode())
+                && productRepository.existsByBarcode(trimmedBarcode)) {
+            throw new IllegalArgumentException("Barcode already exists: " + trimmedBarcode);
         }
 
         mapDtoToEntity(dto, product);
@@ -74,11 +90,14 @@ public class ProductService {
     }
 
     private void mapDtoToEntity(ProductDTO dto, Product entity) {
-        entity.setName(dto.getName());
+        entity.setName(dto.getName() != null ? dto.getName().trim() : null);
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
-        entity.setSku(dto.getSku());
-        entity.setCategory(dto.getCategory());
+        entity.setSku(dto.getSku() != null ? dto.getSku().trim() : null);
+        entity.setCategory(dto.getCategory() != null ? dto.getCategory().trim() : null);
+        entity.setBarcode(dto.getBarcode() != null && !dto.getBarcode().trim().isEmpty() ? dto.getBarcode().trim() : null);
+        entity.setBrand(dto.getBrand() != null && !dto.getBrand().trim().isEmpty() ? dto.getBrand().trim() : null);
+        entity.setUnitCost(dto.getUnitCost());
     }
 
     private ProductDTO mapEntityToDto(Product entity) {
@@ -89,8 +108,12 @@ public class ProductService {
         dto.setPrice(entity.getPrice());
         dto.setSku(entity.getSku());
         dto.setCategory(entity.getCategory());
+        dto.setBarcode(entity.getBarcode());
+        dto.setBrand(entity.getBrand());
+        dto.setUnitCost(entity.getUnitCost());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
         return dto;
     }
+
 }

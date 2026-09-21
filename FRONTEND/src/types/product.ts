@@ -1,20 +1,34 @@
 export interface Product {
   id: number;
   name: string;
-  description: string;
+  productName?: string;
+  description?: string;
   sku: string;
-  price: number;
+  skuCode?: string;
+  barcode?: string;
   category: string;
+  brand?: string;
+  unitCost?: number;
+  price: number;
+  sellingPrice?: number;
+  initialStock?: number;
   createdAt?: string;
   updatedAt?: string;
 }
 
 export interface ProductCreateDTO {
-  name: string;
-  description: string;
   sku: string;
-  price: number;
+  skuCode?: string;
+  barcode?: string;
+  name: string;
+  productName?: string;
   category: string;
+  brand?: string;
+  unitCost?: number;
+  price: number;
+  sellingPrice?: number;
+  initialStock?: number;
+  description?: string;
 }
 
 export interface ProductQueryParams {

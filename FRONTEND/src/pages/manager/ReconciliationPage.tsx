@@ -69,6 +69,7 @@ export const ReconciliationPage: React.FC = () => {
       await inventoryApi.reconcileInventory({
         productId: selectedProductId,
         warehouseId: selectedWarehouseId,
+        physicalQuantity: actualQuantity,
         actualQuantity,
         reason,
       });
@@ -115,24 +116,24 @@ export const ReconciliationPage: React.FC = () => {
           </div>
 
           {currentInventory ? (
-            <div className="grid grid-cols-3 gap-4 bg-slate-950 p-5 rounded-2xl border border-slate-800 text-center">
+            <div className="grid grid-cols-3 gap-4 bg-[#F7F8FA] p-5 rounded-2xl border border-gray-200 text-center">
               <div>
-                <span className="text-xs text-slate-500 block uppercase font-bold">System Record</span>
-                <span className="text-xl font-bold text-slate-100">{currentInventory.quantity}</span>
+                <span className="text-xs text-gray-400 block uppercase font-bold">System Record</span>
+                <span className="text-xl font-bold text-gray-900">{currentInventory.quantity}</span>
               </div>
               <div>
-                <span className="text-xs text-slate-500 block uppercase font-bold">Physical Audit</span>
-                <span className="text-xl font-bold text-indigo-400">{actualQuantity}</span>
+                <span className="text-xs text-gray-400 block uppercase font-bold">Physical Audit</span>
+                <span className="text-xl font-bold text-[#666666]">{actualQuantity}</span>
               </div>
               <div>
-                <span className="text-xs text-slate-500 block uppercase font-bold">Variance</span>
+                <span className="text-xs text-gray-400 block uppercase font-bold">Variance</span>
                 <span
                   className={`text-xl font-bold ${
                     difference === 0
-                      ? 'text-slate-400'
+                      ? 'text-gray-500'
                       : difference > 0
-                      ? 'text-emerald-400'
-                      : 'text-rose-400'
+                      ? 'text-gray-900'
+                      : 'text-gray-900'
                   }`}
                 >
                   {difference > 0 ? `+${difference}` : difference}
@@ -140,7 +141,7 @@ export const ReconciliationPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-500 text-center">
+            <div className="p-4 bg-[#F7F8FA] rounded-xl border border-gray-200 text-xs text-gray-400 text-center">
               No existing stock record initialized for this product in selected warehouse facility.
             </div>
           )}

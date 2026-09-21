@@ -202,7 +202,7 @@ export const InventoryPage: React.FC = () => {
             required
           />
 
-          <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-200">
             <Button variant="secondary" type="button" onClick={() => setIsAddModalOpen(false)}>
               Cancel
             </Button>

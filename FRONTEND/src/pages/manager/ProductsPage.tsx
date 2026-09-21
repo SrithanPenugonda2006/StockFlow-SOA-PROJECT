@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { Plus, Search, RefreshCw } from "lucide-react";
-import { Product, ProductCreateDTO } from "../../types/product";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 import { productApi } from "../../api/productApi";
+import { Product, ProductCreateDTO } from "../../types/product";
+
+import { PageHeader } from "../../components/common/PageHeader";
+import { Input } from "../../components/common/Input";
+import { Button } from "../../components/common/Button";
+import { ConfirmDialog } from "../../components/common/ConfirmDialog";
 import { ProductTable } from "../../components/products/ProductTable";
 import { ProductFormModal } from "../../components/products/ProductFormModal";
 import { ProductDetailModal } from "../../components/products/ProductDetailModal";
-import { ConfirmDialog } from "../../components/common/ConfirmDialog";
+import { CategoriesBrandsView } from "../../components/products/CategoriesBrandsView";
 import { Pagination } from "../../components/common/Pagination";
-import { Input } from "../../components/common/Input";
-import { Button } from "../../components/common/Button";
-import { PageHeader } from "../../components/common/PageHeader";
-import { useAuth } from "../../context/AuthContext";
-import { useToast } from "../../context/ToastContext";
-import { extractErrorMessage } from "../../utils/formatters";
+
+import { Plus, Search, RefreshCw, Package, Tags } from "lucide-react";
 
 export const ProductsPage: React.FC = () => {
   const { role } = useAuth();
   const { showToast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const isAdmin = role === "ADMIN";
+  const activeTab = searchParams.get("tab") || "all";
+
+  const handleTabChange = (tab: string) => {
+    setSearchParams({ tab });
+  };
+
   const canEdit = role === "ADMIN" || role === "MANAGER";
   const canDelete = role === "ADMIN";
   const canAdd = role === "ADMIN" || role === "MANAGER";
@@ -39,20 +48,22 @@ export const ProductsPage: React.FC = () => {
   const fetchProducts = async () => {
     setIsLoading(true);
     try {
-      const res = await productApi.getProducts({ page: currentPage, size: 10, name: searchName || undefined });
+      const res = await productApi.getProducts({ page: currentPage, size: 5, name: searchName || undefined });
       setProducts(res.content || []);
       setTotalPages(res.totalPages || 1);
       setTotalElements(res.totalElements || 0);
-    } catch (err) {
-      showToast("error", "Error Loading Catalog", extractErrorMessage(err));
+    } catch (err: any) {
+      showToast("error", "Error Loading Catalog", err?.response?.data?.message || err?.message || "An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, [currentPage]);
+    if (activeTab === "all") {
+      fetchProducts();
+    }
+  }, [currentPage, activeTab]);
 
   const handleSaveProduct = async (data: ProductCreateDTO) => {
     try {
@@ -65,7 +76,7 @@ export const ProductsPage: React.FC = () => {
       }
       fetchProducts();
     } catch (err: any) {
-      showToast("error", "Save Error", extractErrorMessage(err));
+      showToast("error", "Save Error", err?.response?.data?.message || err?.message || "An unexpected error occurred");
     }
   };
 
@@ -77,17 +88,17 @@ export const ProductsPage: React.FC = () => {
       setProductToDelete(null);
       fetchProducts();
     } catch (err: any) {
-      showToast("error", "Delete Error", extractErrorMessage(err));
+      showToast("error", "Delete Error", err?.response?.data?.message || err?.message || "An unexpected error occurred");
     }
   };
 
   return (
     <div className="flex flex-col gap-6 text-left">
       <PageHeader
-        title="Catalog Products Management"
-        subtitle="Create, edit, and maintain global SKU catalog details."
+        title="Products Management"
+        subtitle="Create, edit, organize categories, and manage product catalog hierarchy."
         actions={
-          canAdd ? (
+          activeTab === "all" && canAdd ? (
             <Button
               variant="primary"
               onClick={() => {
@@ -102,72 +113,118 @@ export const ProductsPage: React.FC = () => {
         }
       />
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between gap-4">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setCurrentPage(0);
-            fetchProducts();
-          }}
-          className="flex items-center gap-3 w-full max-w-md"
-        >
-          <Input
-            placeholder="Search by product name..."
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            leftIcon={<Search className="w-4 h-4" />}
-          />
-          <Button variant="secondary" type="submit">
-            Search
-          </Button>
-        </form>
+      {/* Page-level Navigation Tabs */}
+      <div className="border-b border-gray-200 pb-1">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 max-w-full">
+          <button
+            type="button"
+            onClick={() => handleTabChange("all")}
+            className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-900/20/50 ${
+              activeTab === "all"
+                ? "bg-[#111111] text-white font-semibold"
+                : "bg-white/80 text-gray-500 hover:text-gray-900 hover:bg-gray-100/80 border border-gray-200"
+            }`}
+          >
+            <Package className="w-4 h-4" />
+            <span>All Products</span>
+          </button>
 
-        <Button variant="ghost" onClick={fetchProducts} leftIcon={<RefreshCw className="w-4 h-4" />}>
-          Refresh
-        </Button>
+          <button
+            type="button"
+            onClick={() => handleTabChange("categories")}
+            className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-gray-900/20/50 ${
+              activeTab === "categories"
+                ? "bg-[#111111] text-white font-semibold"
+                : "bg-white/80 text-gray-500 hover:text-gray-900 hover:bg-gray-100/80 border border-gray-200"
+            }`}
+          >
+            <Tags className="w-4 h-4" />
+            <span>Categories & Brands</span>
+          </button>
+        </div>
       </div>
 
-      <ProductTable
-        products={products}
-        isLoading={isLoading}
-        canEdit={canEdit}
-        canDelete={canDelete}
-        onViewDetails={(p) => setDetailProduct(p)}
-        onEdit={(p) => {
-          setSelectedProduct(p);
-          setIsModalOpen(true);
-        }}
-        onDelete={(p) => setProductToDelete(p)}
-      />
+      {/* TAB CONTENT 1: ALL PRODUCTS */}
+      {activeTab === "all" && (
+        <>
+          <div className="bg-white border border-gray-200 rounded-2xl p-4 flex items-center justify-between gap-4">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setCurrentPage(0);
+                fetchProducts();
+              }}
+              className="flex items-center gap-3 w-full max-w-md"
+            >
+              <Input
+                placeholder="Search by product name..."
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                leftIcon={<Search className="w-4 h-4" />}
+              />
+              <Button variant="secondary" type="submit">
+                Search
+              </Button>
+            </form>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalElements={totalElements}
-        pageSize={10}
-        onPageChange={(p) => setCurrentPage(p)}
-      />
+            <Button variant="ghost" onClick={fetchProducts} leftIcon={<RefreshCw className="w-4 h-4" />}>
+              Refresh
+            </Button>
+          </div>
 
-      <ProductFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSaveProduct}
-        product={selectedProduct}
-      />
+          <ProductTable
+            products={products}
+            isLoading={isLoading}
+            canEdit={canEdit}
+            canDelete={canDelete}
+            onViewDetails={(p) => setDetailProduct(p)}
+            onEdit={(p) => {
+              setSelectedProduct(p);
+              setIsModalOpen(true);
+            }}
+            onDelete={(p) => setProductToDelete(p)}
+          />
 
-      <ProductDetailModal
-        isOpen={!!detailProduct}
-        onClose={() => setDetailProduct(null)}
-        product={detailProduct}
-      />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            pageSize={5} totalItems={totalElements} isZeroBased={true}
+            onPageChange={(p) => setCurrentPage(p)}
+          />
 
-      <ConfirmDialog
-        isOpen={!!productToDelete}
-        onClose={() => setProductToDelete(null)}
-        onConfirm={handleDeleteProduct}
-        title="Delete Catalog Product"
-        message={`Are you sure you want to delete "${productToDelete?.name}"? This action cannot be undone.`}
-      />
+          <ProductFormModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={handleSaveProduct}
+            product={selectedProduct}
+          />
+
+          <ProductDetailModal
+            isOpen={!!detailProduct}
+            onClose={() => setDetailProduct(null)}
+            product={detailProduct}
+          />
+
+          <ConfirmDialog
+            isOpen={!!productToDelete}
+            onClose={() => setProductToDelete(null)}
+            onConfirm={handleDeleteProduct}
+            title="Delete Catalog Product"
+            message={`Are you sure you want to delete "${productToDelete?.name}"? This action cannot be undone.`}
+          />
+        </>
+      )}
+
+      {/* TAB CONTENT 2: CATEGORIES & BRANDS */}
+      {activeTab === "categories" && (
+        <CategoriesBrandsView
+          onSelectCategory={(catName) => {
+            setSearchName(catName);
+            handleTabChange("all");
+          }}
+        />
+      )}
     </div>
   );
 };

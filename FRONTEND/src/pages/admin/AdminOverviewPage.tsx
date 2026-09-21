@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageHeader } from '../../components/common/PageHeader';
 import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
+import { Pagination } from '../../components/common/Pagination';
 import { StatCard } from '../../components/common/StatCard';
 import { Button } from '../../components/common/Button';
 import {
@@ -28,6 +29,8 @@ import { adminApi, Manager } from '../../api/adminApi';
 
 export const AdminOverviewPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const [servicesPage, setServicesPage] = useState(1);
+  const servicesPageSize = 5;
   const [managers, setManagers] = useState<Manager[]>([]);
   const [stats, setStats] = useState({
     productsCount: 0,
@@ -109,6 +112,9 @@ export const AdminOverviewPage: React.FC = () => {
     { name: 'Order Service (Port 8084)', status: 'HEALTHY', details: 'Distributed Saga Order Fulfillment' },
   ];
 
+  const servicesStart = (servicesPage - 1) * servicesPageSize;
+  const paginatedServices = services.slice(servicesStart, servicesStart + servicesPageSize);
+
   return (
     <div className="flex flex-col gap-6 text-left max-w-7xl mx-auto pb-12">
       <PageHeader
@@ -181,20 +187,20 @@ export const AdminOverviewPage: React.FC = () => {
       {/* Manager Distribution Card */}
       <Card title="Manager Distribution by Warehouse">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-            <span className="text-xs text-slate-400 uppercase font-bold block mb-1">Total Managers</span>
-            <span className="text-2xl font-black text-amber-400">{stats.totalManagers}</span>
-            <span className="text-[11px] text-slate-400 block mt-1">Operational role accounts</span>
+          <div className="p-4 rounded-xl bg-[#F7F8FA] border border-gray-200">
+            <span className="text-xs text-gray-500 uppercase font-bold block mb-1">Total Managers</span>
+            <span className="text-2xl font-black text-gray-700">{stats.totalManagers}</span>
+            <span className="text-[11px] text-gray-500 block mt-1">Operational role accounts</span>
           </div>
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-            <span className="text-xs text-slate-400 uppercase font-bold block mb-1">Active Managers</span>
-            <span className="text-2xl font-black text-emerald-400">{stats.activeManagers}</span>
-            <span className="text-[11px] text-slate-400 block mt-1">Authentication enabled</span>
+          <div className="p-4 rounded-xl bg-[#F7F8FA] border border-gray-200">
+            <span className="text-xs text-gray-500 uppercase font-bold block mb-1">Active Managers</span>
+            <span className="text-2xl font-black text-gray-900">{stats.activeManagers}</span>
+            <span className="text-[11px] text-gray-500 block mt-1">Authentication enabled</span>
           </div>
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-            <span className="text-xs text-slate-400 uppercase font-bold block mb-1">Inactive Managers</span>
-            <span className="text-2xl font-black text-rose-400">{stats.inactiveManagers}</span>
-            <span className="text-[11px] text-slate-400 block mt-1">Access suspended</span>
+          <div className="p-4 rounded-xl bg-[#F7F8FA] border border-gray-200">
+            <span className="text-xs text-gray-500 uppercase font-bold block mb-1">Inactive Managers</span>
+            <span className="text-2xl font-black text-gray-900">{stats.inactiveManagers}</span>
+            <span className="text-[11px] text-gray-500 block mt-1">Access suspended</span>
           </div>
         </div>
       </Card>
@@ -202,46 +208,54 @@ export const AdminOverviewPage: React.FC = () => {
       {/* Microservices Cluster Health */}
       <Card title="Spring Boot Microservices Cluster Health">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {services.map((srv, idx) => (
-            <div key={idx} className="bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-start justify-between">
+          {paginatedServices.map((srv, idx) => (
+            <div key={idx} className="bg-[#F7F8FA] border border-gray-200 rounded-xl p-4 flex items-start justify-between">
               <div className="flex items-start gap-3">
-                <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-lg">
+                <div className="p-2.5 bg-gray-100 border border-gray-800 text-gray-900 rounded-lg">
                   <Server className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-100 text-sm">{srv.name}</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">{srv.details}</p>
+                  <h4 className="font-bold text-gray-900 text-sm">{srv.name}</h4>
+                  <p className="text-xs text-gray-500 mt-0.5">{srv.details}</p>
                 </div>
               </div>
               <Badge variant="success">{srv.status}</Badge>
             </div>
           ))}
         </div>
+        <div className="mt-4">
+          <Pagination
+            totalItems={services.length}
+            currentPage={servicesPage}
+            pageSize={servicesPageSize}
+            onPageChange={setServicesPage}
+          />
+        </div>
       </Card>
 
       {/* Infrastructure Safeguards */}
       <Card title="Infrastructure & Concurrency Safety Protocols">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
-            <ShieldCheck className="w-6 h-6 text-indigo-400 mb-2" />
-            <h5 className="font-bold text-slate-200 text-sm">Pessimistic Locks</h5>
-            <p className="text-xs text-slate-400 mt-1">
+          <div className="p-4 bg-[#F7F8FA] rounded-xl border border-gray-200">
+            <ShieldCheck className="w-6 h-6 text-[#666666] mb-2" />
+            <h5 className="font-bold text-gray-800 text-sm">Pessimistic Locks</h5>
+            <p className="text-xs text-gray-500 mt-1">
               PESSIMISTIC_WRITE locks prevent stock allocation race conditions during concurrent checkout.
             </p>
           </div>
 
-          <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
-            <Database className="w-6 h-6 text-emerald-400 mb-2" />
-            <h5 className="font-bold text-slate-200 text-sm">PostgreSQL Multi-Database</h5>
-            <p className="text-xs text-slate-400 mt-1">
+          <div className="p-4 bg-[#F7F8FA] rounded-xl border border-gray-200">
+            <Database className="w-6 h-6 text-gray-900 mb-2" />
+            <h5 className="font-bold text-gray-800 text-sm">PostgreSQL Multi-Database</h5>
+            <p className="text-xs text-gray-500 mt-1">
               Dedicated databases for Auth, Product, Inventory, and Order domains with Flyway migrations.
             </p>
           </div>
 
-          <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
-            <Layers className="w-6 h-6 text-sky-400 mb-2" />
-            <h5 className="font-bold text-slate-200 text-sm">Eureka Discovery & Gateway</h5>
-            <p className="text-xs text-slate-400 mt-1">
+          <div className="p-4 bg-[#F7F8FA] rounded-xl border border-gray-200">
+            <Layers className="w-6 h-6 text-gray-600 mb-2" />
+            <h5 className="font-bold text-gray-800 text-sm">Eureka Discovery & Gateway</h5>
+            <p className="text-xs text-gray-500 mt-1">
               Centralized API Gateway router with Eureka service discovery and JWT token verification.
             </p>
           </div>

@@ -70,7 +70,7 @@ export const ManagerLayout: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden">
+    <div className="flex h-screen bg-[#F7F8FA] text-gray-900 overflow-hidden">
       {/* Desktop / Tablet Sidebar (Collapsible Rail) */}
       <div className="hidden md:block h-full shrink-0 z-30 transition-all duration-300 ease-in-out">
         <Sidebar
@@ -84,13 +84,13 @@ export const ManagerLayout: React.FC = () => {
         <div className="fixed inset-0 z-50 md:hidden flex">
           {/* Backdrop Overlay */}
           <div
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
             onClick={() => setMobileSidebarOpen(false)}
             aria-hidden="true"
           />
 
           {/* Sliding Sidebar Container */}
-          <div className="relative z-10 w-64 h-full bg-slate-950 shadow-2xl transition-transform transform duration-300 ease-in-out">
+          <div className="relative z-10 w-64 h-full shadow-2xl transition-transform transform duration-300 ease-in-out">
             <Sidebar
               isCollapsed={false}
               onCloseMobile={() => setMobileSidebarOpen(false)}

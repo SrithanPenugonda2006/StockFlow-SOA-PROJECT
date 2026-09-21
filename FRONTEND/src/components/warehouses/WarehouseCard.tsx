@@ -19,33 +19,33 @@ export const WarehouseCard: React.FC<WarehouseCardProps> = ({
   isAdmin = false,
 }) => {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl hover:border-slate-700 transition-all duration-300 flex flex-col justify-between text-left group">
+    <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col justify-between text-left group">
       <div>
         <div className="flex items-start justify-between mb-4">
-          <div className="p-3.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-xl group-hover:scale-105 transition-transform">
+          <div className="p-3.5 bg-[#F5F5F5] border border-[#E5E5E5] text-[#666666] rounded-xl group-hover:scale-105 transition-transform">
             <Building2 className="w-7 h-7" />
           </div>
-          <span className="text-xs font-mono text-slate-500 font-semibold">ID: #{warehouse.id}</span>
+          <span className="text-xs font-mono text-gray-400 font-semibold">ID: #{warehouse.id}</span>
         </div>
 
-        <h3 className="text-lg font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">
+        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#666666] transition-colors">
           {warehouse.name}
         </h3>
 
-        <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2">
-          <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+        <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-2">
+          <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
           <span>{warehouse.location}</span>
         </div>
 
         {warehouse.capacity && (
-          <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs">
-            <span className="text-slate-400">Storage Capacity</span>
-            <span className="font-bold text-slate-200">{warehouse.capacity.toLocaleString()} Units</span>
+          <div className="mt-4 pt-3 border-t border-gray-200/60 flex items-center justify-between text-xs">
+            <span className="text-gray-500">Storage Capacity</span>
+            <span className="font-bold text-gray-800">{warehouse.capacity.toLocaleString()} Units</span>
           </div>
         )}
       </div>
 
-      <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+      <div className="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between">
         {onViewInventory && (
           <Button
             variant="secondary"
@@ -61,7 +61,7 @@ export const WarehouseCard: React.FC<WarehouseCardProps> = ({
           {onEdit && (
             <button
               onClick={() => onEdit(warehouse)}
-              className="p-2 text-slate-400 hover:text-indigo-400 hover:bg-slate-800 rounded-lg transition-colors"
+              className="p-2 text-gray-500 hover:text-[#666666] hover:bg-gray-100 rounded-lg transition-colors"
               title="Edit Warehouse"
             >
               <Edit className="w-4 h-4" />
@@ -71,7 +71,7 @@ export const WarehouseCard: React.FC<WarehouseCardProps> = ({
           {isAdmin && onDelete && (
             <button
               onClick={() => onDelete(warehouse)}
-              className="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors"
+              className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
               title="Delete Warehouse"
             >
               <Trash2 className="w-4 h-4" />

@@ -16,16 +16,16 @@ export const AdminServiceNotice: React.FC<AdminServiceNoticeProps> = ({
   actionText = 'Service Status: Not Configured',
 }) => {
   return (
-    <Card className="p-8 text-center max-w-2xl mx-auto my-8 border-slate-800 bg-slate-900/60 shadow-xl rounded-2xl">
-      <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-4">
+    <Card className="p-8 text-center max-w-2xl mx-auto my-8 border-gray-200 bg-white/60 shadow-xl rounded-2xl">
+      <div className="w-14 h-14 rounded-2xl bg-[#F5F5F5] border border-[#E5E5E5] text-[#666666] flex items-center justify-center mx-auto mb-4">
         <Icon className="w-7 h-7" />
       </div>
       <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-sm text-slate-400 leading-relaxed mb-6 max-w-lg mx-auto">
+      <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-lg mx-auto">
         {description}
       </p>
-      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs font-semibold text-slate-300">
-        <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-100/80 border border-gray-300/60 text-xs font-semibold text-gray-600">
+        <span className="w-2 h-2 rounded-full bg-gray-700 animate-pulse" />
         <span>{actionText}</span>
       </div>
     </Card>

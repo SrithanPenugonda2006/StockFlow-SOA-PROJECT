@@ -52,6 +52,7 @@ export const ReconciliationFormModal: React.FC<ReconciliationFormModalProps> = (
     await onSubmit({
       productId: inventoryItem.productId,
       warehouseId: inventoryItem.warehouseId,
+      physicalQuantity: data.actualQuantity,
       actualQuantity: data.actualQuantity,
       reason: data.reason,
     });
@@ -66,24 +67,24 @@ export const ReconciliationFormModal: React.FC<ReconciliationFormModalProps> = (
       subtitle={`Reconcile physical stock count against database records (Product #${inventoryItem.productId})`}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4">
-        <div className="grid grid-cols-3 gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800 text-center text-xs">
+        <div className="grid grid-cols-3 gap-3 bg-[#F7F8FA] p-4 rounded-xl border border-gray-200 text-center text-xs">
           <div>
-            <span className="text-slate-500 block uppercase font-bold">System Record</span>
-            <span className="text-lg font-bold text-slate-100">{inventoryItem.quantity}</span>
+            <span className="text-gray-400 block uppercase font-bold">System Record</span>
+            <span className="text-lg font-bold text-gray-900">{inventoryItem.quantity}</span>
           </div>
           <div>
-            <span className="text-slate-500 block uppercase font-bold">Physical Count</span>
-            <span className="text-lg font-bold text-indigo-400">{actualQty}</span>
+            <span className="text-gray-400 block uppercase font-bold">Physical Count</span>
+            <span className="text-lg font-bold text-[#666666]">{actualQty}</span>
           </div>
           <div>
-            <span className="text-slate-500 block uppercase font-bold">Variance</span>
+            <span className="text-gray-400 block uppercase font-bold">Variance</span>
             <span
               className={`text-lg font-bold ${
                 difference === 0
-                  ? 'text-slate-400'
+                  ? 'text-gray-500'
                   : difference > 0
-                  ? 'text-emerald-400'
-                  : 'text-rose-400'
+                  ? 'text-gray-900'
+                  : 'text-gray-900'
               }`}
             >
               {difference > 0 ? `+${difference}` : difference}
@@ -112,7 +113,7 @@ export const ReconciliationFormModal: React.FC<ReconciliationFormModalProps> = (
           error={errors.reason?.message}
         />
 
-        <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
+        <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-200">
           <Button variant="secondary" type="button" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>

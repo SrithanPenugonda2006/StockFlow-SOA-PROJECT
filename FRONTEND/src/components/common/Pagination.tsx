@@ -1,82 +1,131 @@
-import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from './Button';
+import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface PaginationProps {
+export interface PaginationProps {
   currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  totalPages?: number;
+  totalItems?: number;
   totalElements?: number;
   pageSize?: number;
+  onPageChange: (page: number) => void;
+  isZeroBased?: boolean;
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
   currentPage,
-  totalPages,
-  onPageChange,
+  totalPages: propTotalPages,
+  totalItems: propTotalItems,
   totalElements,
-  pageSize,
+  pageSize = 6,
+  onPageChange,
+  isZeroBased = false,
 }) => {
-  if (totalPages <= 1) return null;
+  const totalItems = propTotalItems ?? totalElements ?? 0;
+  if (!totalItems || totalItems <= pageSize) {
+    return null;
+  }
+
+  const computedTotalPages = propTotalPages || Math.ceil(totalItems / pageSize);
+  if (computedTotalPages <= 1) {
+    return null;
+  }
+
+  const normalizedPage = isZeroBased ? currentPage + 1 : currentPage;
+  const page1 = Math.max(1, Math.min(normalizedPage, computedTotalPages));
+
+  const startItem = (page1 - 1) * pageSize + 1;
+  const endItem = Math.min(page1 * pageSize, totalItems);
+
+  const handlePageSelect = (targetPage1: number) => {
+    if (targetPage1 < 1 || targetPage1 > computedTotalPages) return;
+    const emitPage = isZeroBased ? targetPage1 - 1 : targetPage1;
+    onPageChange(emitPage);
+  };
+
+  const getPageNumbers = (): (number | string)[] => {
+    const pages: (number | string)[] = [];
+    if (computedTotalPages <= 7) {
+      for (let i = 1; i <= computedTotalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (page1 > 3) pages.push("...");
+      const start = Math.max(2, page1 - 1);
+      const end = Math.min(computedTotalPages - 1, page1 + 1);
+      for (let i = start; i <= end; i++) {
+        if (!pages.includes(i)) pages.push(i);
+      }
+      if (page1 < computedTotalPages - 2) pages.push("...");
+      pages.push(computedTotalPages);
+    }
+    return pages;
+  };
+
+  const pageNumbers = getPageNumbers();
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 text-sm text-slate-400">
-      <div>
-        {totalElements !== undefined && pageSize !== undefined ? (
-          <span>
-            Showing{' '}
-            <strong className="text-slate-100 font-semibold">
-              {currentPage * pageSize + 1}
-            </strong>{' '}
-            to{' '}
-            <strong className="text-slate-100 font-semibold">
-              {Math.min((currentPage + 1) * pageSize, totalElements)}
-            </strong>{' '}
-            of <strong className="text-slate-100 font-semibold">{totalElements}</strong> items
-          </span>
-        ) : (
-          <span>
-            Page <strong className="text-slate-100">{currentPage + 1}</strong> of{' '}
-            <strong className="text-slate-100">{totalPages}</strong>
-          </span>
-        )}
+    <nav
+      aria-label="Pagination"
+      className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-gray-200 text-sm text-gray-500 font-medium"
+    >
+      <div className="text-xs text-gray-600 select-none">
+        Showing <strong className="text-gray-900 font-bold">{startItem}</strong> to{" "}
+        <strong className="text-gray-900 font-bold">{endItem}</strong> of{" "}
+        <strong className="text-gray-900 font-bold">{totalItems}</strong> items
       </div>
 
-      <div className="flex items-center gap-2">
-        <Button
-          variant="secondary"
-          size="sm"
-          disabled={currentPage === 0}
-          onClick={() => onPageChange(currentPage - 1)}
-          leftIcon={<ChevronLeft className="w-4 h-4" />}
+      <div className="flex items-center gap-1.5 shrink-0">
+        <button
+          type="button"
+          onClick={() => handlePageSelect(page1 - 1)}
+          disabled={page1 <= 1}
+          aria-label="Previous page"
+          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#D4D4D4] bg-white text-xs font-semibold text-gray-900 hover:bg-[#F5F5F5] disabled:opacity-40 disabled:hover:bg-white disabled:cursor-not-allowed transition-all cursor-pointer"
         >
-          Previous
-        </Button>
+          <ChevronLeft className="w-3.5 h-3.5" />
+          <span>Previous</span>
+        </button>
+
         <div className="flex items-center gap-1">
-          {Array.from({ length: totalPages }).map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => onPageChange(idx)}
-              className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
-                currentPage === idx
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
-              }`}
-            >
-              {idx + 1}
-            </button>
-          ))}
+          {pageNumbers.map((p, idx) => {
+            if (typeof p === "string") {
+              return (
+                <span key={"ellipsis-" + idx} className="px-2 py-1 text-xs text-gray-400 select-none">
+                  ...
+                </span>
+              );
+            }
+            const isCurrent = p === page1;
+            return (
+              <button
+                key={"page-" + p}
+                type="button"
+                onClick={() => handlePageSelect(p)}
+                aria-label={"Page " + p}
+                aria-current={isCurrent ? "page" : undefined}
+                className={
+                  "min-w-[32px] h-8 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer " +
+                  (isCurrent
+                    ? "bg-[#111111] text-white shadow-xs"
+                    : "bg-white text-gray-900 border border-[#D4D4D4] hover:bg-[#F5F5F5]")
+                }
+              >
+                {p}
+              </button>
+            );
+          })}
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          disabled={currentPage >= totalPages - 1}
-          onClick={() => onPageChange(currentPage + 1)}
-          rightIcon={<ChevronRight className="w-4 h-4" />}
+
+        <button
+          type="button"
+          onClick={() => handlePageSelect(page1 + 1)}
+          disabled={page1 >= computedTotalPages}
+          aria-label="Next page"
+          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-[#D4D4D4] bg-white text-xs font-semibold text-gray-900 hover:bg-[#F5F5F5] disabled:opacity-40 disabled:hover:bg-white disabled:cursor-not-allowed transition-all cursor-pointer"
         >
-          Next
-        </Button>
+          <span>Next</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
       </div>
-    </div>
+    </nav>
   );
 };

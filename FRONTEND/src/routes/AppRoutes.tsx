@@ -21,10 +21,19 @@ import { DashboardPage } from '../pages/manager/DashboardPage';
 import { ProductsPage } from '../pages/manager/ProductsPage';
 import { WarehousesPage } from '../pages/manager/WarehousesPage';
 import { InventoryPage } from '../pages/manager/InventoryPage';
-import { LowStockPage } from '../pages/manager/LowStockPage';
+import { StockOperationsPage } from '../pages/manager/StockOperationsPage';
+import { TransfersPage } from '../pages/manager/TransfersPage';
+import { ProcurementPage } from '../pages/manager/ProcurementPage';
+import { SuppliersPage } from '../pages/manager/SuppliersPage';
+import { SmartInventoryPage } from '../pages/manager/SmartInventoryPage';
+import { BarcodeScannerPage } from '../pages/manager/BarcodeScannerPage';
+import { BatchesTrackingPage } from '../pages/manager/BatchesTrackingPage';
+import { AnalyticsPage } from '../pages/manager/AnalyticsPage';
+import { AlertsPage } from '../pages/manager/AlertsPage';
 import { ReconciliationPage } from '../pages/manager/ReconciliationPage';
 import { TransactionsPage } from '../pages/manager/TransactionsPage';
 import { OrdersPage } from '../pages/manager/OrdersPage';
+import { HelpPage } from '../pages/manager/HelpPage';
 
 // Admin Pages
 import { AdminOverviewPage } from '../pages/admin/AdminOverviewPage';
@@ -80,21 +89,31 @@ export const AppRoutes: React.FC = () => {
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/warehouses" element={<WarehousesPage />} />
           <Route path="/inventory" element={<InventoryPage />} />
-          
+          <Route path="/stock-operations" element={<StockOperationsPage />} />
+          <Route path="/transfers" element={<TransfersPage />} />
+          <Route path="/procurement" element={<ProcurementPage />} />
+          <Route path="/suppliers" element={<SuppliersPage />} />
+          <Route path="/smart-inventory" element={<SmartInventoryPage />} />
+          <Route path="/barcode-scanner" element={<BarcodeScannerPage />} />
+          <Route path="/batches" element={<BatchesTrackingPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/alerts" element={<AlertsPage />} />
+          <Route path="/help" element={<HelpPage />} />
+
           {/* Low Stock Routes */}
-          <Route path="/low-stock" element={<LowStockPage />} />
-          <Route path="/inventory/low-stock" element={<LowStockPage />} />
-          
+          <Route path="/low-stock" element={<AlertsPage />} />
+          <Route path="/inventory/low-stock" element={<AlertsPage />} />
+
           {/* Reconciliation Routes */}
           <Route path="/reconciliation" element={<ReconciliationPage />} />
           <Route path="/inventory/reconcile" element={<ReconciliationPage />} />
           <Route path="/inventory/reconciliation" element={<ReconciliationPage />} />
-          
+
           {/* Transactions Routes */}
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/inventory/transactions" element={<TransactionsPage />} />
           <Route path="/manager/transactions" element={<TransactionsPage />} />
-          
+
           <Route path="/orders" element={<OrdersPage />} />
 
           {/* Admin Control Center Protected Routes (Strictly ADMIN Only) */}

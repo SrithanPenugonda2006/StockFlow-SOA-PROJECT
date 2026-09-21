@@ -14,18 +14,18 @@ export const SettingsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card title="General Operational Defaults">
           <div className="space-y-4 pt-2">
-            <div className="flex justify-between items-center p-3 bg-slate-950 rounded-xl border border-slate-800">
+            <div className="flex justify-between items-center p-3 bg-[#F7F8FA] rounded-xl border border-gray-200">
               <div>
-                <span className="text-xs text-slate-300 font-semibold block">Default Low-Stock Threshold</span>
-                <span className="text-[11px] text-slate-500">Alert level for inventory replenishment</span>
+                <span className="text-xs text-gray-600 font-semibold block">Default Low-Stock Threshold</span>
+                <span className="text-[11px] text-gray-400">Alert level for inventory replenishment</span>
               </div>
               <Badge variant="warning">25 Units</Badge>
             </div>
 
-            <div className="flex justify-between items-center p-3 bg-slate-950 rounded-xl border border-slate-800">
+            <div className="flex justify-between items-center p-3 bg-[#F7F8FA] rounded-xl border border-gray-200">
               <div>
-                <span className="text-xs text-slate-300 font-semibold block">Database Concurrency Control</span>
-                <span className="text-[11px] text-slate-500">Locking policy for checkout reservations</span>
+                <span className="text-xs text-gray-600 font-semibold block">Database Concurrency Control</span>
+                <span className="text-[11px] text-gray-400">Locking policy for checkout reservations</span>
               </div>
               <Badge variant="purple">PESSIMISTIC_WRITE</Badge>
             </div>
@@ -34,18 +34,18 @@ export const SettingsPage: React.FC = () => {
 
         <Card title="Security & Authentication Config">
           <div className="space-y-4 pt-2">
-            <div className="flex justify-between items-center p-3 bg-slate-950 rounded-xl border border-slate-800">
+            <div className="flex justify-between items-center p-3 bg-[#F7F8FA] rounded-xl border border-gray-200">
               <div>
-                <span className="text-xs text-slate-300 font-semibold block">Token Authentication Protocol</span>
-                <span className="text-[11px] text-slate-500">Bearer JWT signature verification</span>
+                <span className="text-xs text-gray-600 font-semibold block">Token Authentication Protocol</span>
+                <span className="text-[11px] text-gray-400">Bearer JWT signature verification</span>
               </div>
               <Badge variant="success">HMAC-SHA256</Badge>
             </div>
 
-            <div className="flex justify-between items-center p-3 bg-slate-950 rounded-xl border border-slate-800">
+            <div className="flex justify-between items-center p-3 bg-[#F7F8FA] rounded-xl border border-gray-200">
               <div>
-                <span className="text-xs text-slate-300 font-semibold block">Email Verification (OTP)</span>
-                <span className="text-[11px] text-slate-500">Registration OTP via Spring Mail SMTP</span>
+                <span className="text-xs text-gray-600 font-semibold block">Email Verification (OTP)</span>
+                <span className="text-[11px] text-gray-400">Registration OTP via Spring Mail SMTP</span>
               </div>
               <Badge variant="info">ENABLED</Badge>
             </div>

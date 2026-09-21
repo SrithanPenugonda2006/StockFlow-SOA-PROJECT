@@ -42,8 +42,9 @@ public class InventoryTransaction {
     private LocalDateTime timestamp = LocalDateTime.now();
 
     public enum TransactionType {
-        SALE, RESTOCK, RESERVATION, RELEASE, RECONCILIATION, ADJUSTMENT
+        SALE, RESTOCK, RESERVATION, RELEASE, RECONCILIATION, ADJUSTMENT, DISPATCH, TRANSFER_IN, TRANSFER_OUT
     }
+
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

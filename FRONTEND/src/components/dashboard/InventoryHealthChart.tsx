@@ -28,41 +28,41 @@ export const InventoryHealthChart: React.FC<InventoryHealthChartProps> = ({ coun
       label: 'Healthy',
       count: healthy,
       pct: healthyPct,
-      color: 'bg-emerald-500',
-      textColor: 'text-emerald-400',
-      borderColor: 'border-emerald-500/30',
-      bgColor: 'bg-emerald-500/10',
-      icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />,
+      color: 'bg-gray-900',
+      textColor: 'text-gray-900',
+      borderColor: 'border-gray-800',
+      bgColor: 'bg-[#F5F5F5]',
+      icon: <CheckCircle2 className="w-4 h-4 text-gray-900" />,
     },
     {
       label: 'Low Stock',
       count: lowStock,
       pct: lowStockPct,
-      color: 'bg-amber-500',
-      textColor: 'text-amber-400',
-      borderColor: 'border-amber-500/30',
-      bgColor: 'bg-amber-500/10',
-      icon: <AlertTriangle className="w-4 h-4 text-amber-400" />,
+      color: 'bg-gray-700',
+      textColor: 'text-gray-700',
+      borderColor: 'border-gray-600',
+      bgColor: 'bg-[#FAFAFA]',
+      icon: <AlertTriangle className="w-4 h-4 text-gray-700" />,
     },
     {
       label: 'Critical',
       count: critical,
       pct: criticalPct,
-      color: 'bg-rose-500',
-      textColor: 'text-rose-400',
-      borderColor: 'border-rose-500/30',
-      bgColor: 'bg-rose-500/10',
-      icon: <AlertOctagon className="w-4 h-4 text-rose-400" />,
+      color: 'bg-gray-900',
+      textColor: 'text-gray-900',
+      borderColor: 'border-gray-800',
+      bgColor: 'bg-[#F5F5F5]',
+      icon: <AlertOctagon className="w-4 h-4 text-gray-900" />,
     },
     {
       label: 'Out of Stock',
       count: outOfStock,
       pct: outOfStockPct,
-      color: 'bg-red-600',
-      textColor: 'text-red-400',
-      borderColor: 'border-red-500/30',
-      bgColor: 'bg-red-500/10',
-      icon: <XCircle className="w-4 h-4 text-red-400" />,
+      color: 'bg-gray-500',
+      textColor: 'text-gray-700',
+      borderColor: 'border-gray-200',
+      bgColor: 'bg-gray-100',
+      icon: <XCircle className="w-4 h-4 text-gray-500" />,
     },
   ];
 
@@ -73,40 +73,40 @@ export const InventoryHealthChart: React.FC<InventoryHealthChartProps> = ({ coun
       className="h-full flex flex-col justify-between"
     >
       {isLoading ? (
-        <div className="py-12 flex items-center justify-center text-slate-500 text-xs">Loading health metrics...</div>
+        <div className="py-12 flex items-center justify-center text-gray-400 text-xs font-medium">Loading health metrics...</div>
       ) : (
         <div className="flex flex-col justify-between flex-1 gap-4 pt-1 pb-1">
           {/* Top Combined Segmented Distribution Bar */}
           <div className="w-full space-y-2">
-            <div className="flex justify-between items-center text-xs text-slate-400">
-              <span className="font-semibold text-slate-300">Health Portfolio</span>
-              <span className="font-bold text-slate-100">{total} Total Records</span>
+            <div className="flex justify-between items-center text-xs text-gray-500">
+              <span className="font-semibold text-gray-700">Health Portfolio</span>
+              <span className="font-bold text-gray-900">{total} Total Records</span>
             </div>
-            <div className="w-full h-3.5 bg-slate-800/80 rounded-full overflow-hidden flex gap-0.5 p-0.5 border border-slate-700/50">
+            <div className="w-full h-3.5 bg-gray-100 rounded-full overflow-hidden flex gap-0.5 p-0.5 border border-gray-200">
               {healthyPct > 0 && (
                 <div
-                  className="h-full bg-emerald-500 rounded-l-full transition-all duration-500"
+                  className="h-full bg-gray-900 rounded-l-full transition-all duration-500"
                   style={{ width: `${healthyPct}%` }}
                   title={`Healthy: ${healthy} (${healthyPct}%)`}
                 />
               )}
               {lowStockPct > 0 && (
                 <div
-                  className="h-full bg-amber-500 transition-all duration-500"
+                  className="h-full bg-gray-700 transition-all duration-500"
                   style={{ width: `${lowStockPct}%` }}
                   title={`Low Stock: ${lowStock} (${lowStockPct}%)`}
                 />
               )}
               {criticalPct > 0 && (
                 <div
-                  className="h-full bg-rose-500 transition-all duration-500"
+                  className="h-full bg-gray-900 transition-all duration-500"
                   style={{ width: `${criticalPct}%` }}
                   title={`Critical: ${critical} (${criticalPct}%)`}
                 />
               )}
               {outOfStockPct > 0 && (
                 <div
-                  className="h-full bg-red-600 rounded-r-full transition-all duration-500"
+                  className="h-full bg-gray-500 rounded-r-full transition-all duration-500"
                   style={{ width: `${outOfStockPct}%` }}
                   title={`Out of Stock: ${outOfStock} (${outOfStockPct}%)`}
                 />
@@ -123,11 +123,11 @@ export const InventoryHealthChart: React.FC<InventoryHealthChartProps> = ({ coun
               >
                 <div className="flex items-center gap-2.5">
                   {item.icon}
-                  <span className="text-xs font-semibold text-slate-200">{item.label}</span>
+                  <span className="text-xs font-bold text-gray-900">{item.label}</span>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <div className="w-24 bg-slate-800 rounded-full h-2 overflow-hidden hidden sm:block">
+                  <div className="w-24 bg-gray-200/80 rounded-full h-2 overflow-hidden hidden sm:block">
                     <div
                       className={`h-full ${item.color} rounded-full transition-all duration-500`}
                       style={{ width: `${item.pct}%` }}
@@ -135,10 +135,10 @@ export const InventoryHealthChart: React.FC<InventoryHealthChartProps> = ({ coun
                   </div>
 
                   <div className="text-right min-w-[70px]">
-                    <span className="text-xs font-bold text-slate-100 block">
+                    <span className="text-xs font-bold text-gray-900 block">
                       {item.count} {item.count === 1 ? 'record' : 'records'}
                     </span>
-                    <span className={`text-[10px] font-semibold ${item.textColor}`}>{item.pct}%</span>
+                    <span className={`text-[10px] font-bold ${item.textColor}`}>{item.pct}%</span>
                   </div>
                 </div>
               </div>

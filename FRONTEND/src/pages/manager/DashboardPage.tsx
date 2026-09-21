@@ -166,13 +166,15 @@ export const DashboardPage: React.FC = () => {
     const dateMap: Record<string, { date: string; inflow: number; outflow: number }> = {};
 
     filteredTxs.forEach((tx) => {
-      const dateStr = tx.createdAt ? tx.createdAt.split('T')[0] : 'Recent';
+      const ts = tx.createdAt || tx.timestamp || '';
+      const dateStr = ts ? ts.split('T')[0] : 'Recent';
       if (!dateMap[dateStr]) {
         dateMap[dateStr] = { date: dateStr, inflow: 0, outflow: 0 };
       }
 
-      const q = Math.abs(tx.quantityChange);
-      if (tx.transactionType === 'RESTOCK' || tx.transactionType === 'RELEASE' || tx.quantityChange > 0) {
+      const change = tx.quantityChange ?? tx.quantity ?? 0;
+      const q = Math.abs(change);
+      if (tx.transactionType === 'RESTOCK' || tx.transactionType === 'RELEASE' || change > 0) {
         dateMap[dateStr].inflow += q;
       } else {
         dateMap[dateStr].outflow += q;

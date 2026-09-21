@@ -8,7 +8,7 @@ export const orderApi = {
     return response.data;
   },
 
-  getOrders: async (page: number = 0, size: number = 10): Promise<PageResponse<Order>> => {
+  getOrders: async (page: number = 0, size: number = 5): Promise<PageResponse<Order>> => {
     const response = await apiClient.get<PageResponse<Order>>('/api/orders', {
       params: { page, size },
     });
@@ -23,7 +23,7 @@ export const orderApi = {
   getOrdersByCustomer: async (
     customerId: string,
     page: number = 0,
-    size: number = 10
+    size: number = 5
   ): Promise<PageResponse<Order>> => {
     const response = await apiClient.get<PageResponse<Order>>(`/api/orders/customer/${customerId}`, {
       params: { page, size },

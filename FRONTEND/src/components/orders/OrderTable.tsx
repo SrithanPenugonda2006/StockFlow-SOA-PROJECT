@@ -27,15 +27,15 @@ export const OrderTable: React.FC<OrderTableProps> = ({
       accessorKey: 'id',
       cell: (row) => (
         <div>
-          <span className="font-bold text-slate-100 block">Order #{row.id}</span>
-          <span className="text-xs text-slate-400">Customer: {row.customerId}</span>
+          <span className="font-bold text-gray-900 block">Order #{row.id}</span>
+          <span className="text-xs text-gray-500">Customer: {row.customerId}</span>
         </div>
       ),
     },
     {
       header: 'Items',
       cell: (row) => (
-        <span className="text-xs font-semibold bg-slate-800 px-2 py-1 rounded-md text-slate-300">
+        <span className="text-xs font-semibold bg-gray-100 px-2 py-1 rounded-md text-gray-600">
           {row.items ? row.items.length : 0} Product(s)
         </span>
       ),
@@ -43,7 +43,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
     {
       header: 'Total Amount',
       accessorKey: 'totalAmount',
-      cell: (row) => <span className="font-bold text-emerald-400">{formatCurrency(row.totalAmount)}</span>,
+      cell: (row) => <span className="font-bold text-gray-900">{formatCurrency(row.totalAmount)}</span>,
     },
     {
       header: 'Status',
@@ -52,7 +52,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
     {
       header: 'Placed Date',
       accessorKey: 'createdAt',
-      cell: (row) => <span className="text-xs text-slate-400">{formatDate(row.createdAt)}</span>,
+      cell: (row) => <span className="text-xs text-gray-500">{formatDate(row.createdAt)}</span>,
     },
     {
       header: 'Actions',
@@ -74,7 +74,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
               variant="outline"
               size="sm"
               onClick={() => onUpdateStatus(row.id, 'SHIPPED')}
-              leftIcon={<Truck className="w-3.5 h-3.5 text-amber-400" />}
+              leftIcon={<Truck className="w-3.5 h-3.5 text-gray-700" />}
             >
               Dispatch
             </Button>

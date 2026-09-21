@@ -21,14 +21,14 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-semibold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg active:scale-[0.98]';
+    'inline-flex items-center justify-center font-semibold tracking-wide transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900/20 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl active:scale-[0.98] cursor-pointer';
 
   const variants = {
-    primary: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/25 focus:ring-indigo-500',
-    secondary: 'bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 focus:ring-slate-500',
-    danger: 'bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/25 focus:ring-rose-500',
-    ghost: 'text-slate-300 hover:text-slate-100 hover:bg-slate-800/60 focus:ring-slate-500',
-    outline: 'border border-indigo-500/50 text-indigo-300 hover:bg-indigo-500/10 focus:ring-indigo-500',
+    primary:   'bg-[#111111] hover:bg-[#2A2A2A] active:bg-black text-white shadow-xs',
+    secondary: 'bg-white hover:bg-[#F5F5F5] text-[#111111] border border-[#D4D4D4]',
+    danger:    'bg-[#DC2626] hover:bg-[#B91C1C] active:bg-[#991B1B] text-white shadow-xs focus:ring-red-500/30',
+    ghost:     'text-[#555555] hover:text-[#111111] hover:bg-[#F5F5F5]',
+    outline:   'border border-[#D4D4D4] text-[#111111] hover:bg-[#F5F5F5]',
   };
 
   const sizes = {

@@ -1,17 +1,16 @@
 import { renderStockStatusBadge } from "../../utils/stockStatus";
 import { PageHeader } from "../../components/common/PageHeader";
-import React, { useEffect, useState } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { LowStockItem } from '../../types/inventory';
-import { Product } from '../../types/product';
-import { Warehouse } from '../../types/warehouse';
-import { inventoryApi } from '../../api/inventoryApi';
-import { productApi } from '../../api/productApi';
-import { warehouseApi } from '../../api/warehouseApi';
-import { DataTable, Column } from '../../components/common/DataTable';
-import { Badge } from '../../components/common/Badge';
-import { Button } from '../../components/common/Button';
-import { useToast } from '../../context/ToastContext';
+import React, { useEffect, useState } from "react";
+import { RefreshCw } from "lucide-react";
+import { LowStockItem } from "../../types/inventory";
+import { Product } from "../../types/product";
+import { Warehouse } from "../../types/warehouse";
+import { inventoryApi } from "../../api/inventoryApi";
+import { productApi } from "../../api/productApi";
+import { warehouseApi } from "../../api/warehouseApi";
+import { DataTable, Column } from "../../components/common/DataTable";
+import { Button } from "../../components/common/Button";
+import { useToast } from "../../context/ToastContext";
 
 export const LowStockPage: React.FC = () => {
   const { showToast } = useToast();
@@ -20,6 +19,8 @@ export const LowStockPage: React.FC = () => {
   const [productMap, setProductMap] = useState<Record<number, Product>>({});
   const [warehouseMap, setWarehouseMap] = useState<Record<number, Warehouse>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
 
   const fetchLowStock = async () => {
     setIsLoading(true);
@@ -39,11 +40,11 @@ export const LowStockPage: React.FC = () => {
       setWarehouseMap(wMap);
 
       const items = await inventoryApi.getLowStockInventory();
-      // Filter out orphaned stock items for deleted/non-existent catalog products
       const validItems = (items || []).filter((item) => !!pMap[item.productId]);
       setLowStockItems(validItems);
+      setCurrentPage(1);
     } catch (err) {
-      showToast('error', 'Error Loading Alerts', 'Unable to fetch low stock warnings.');
+      showToast("error", "Error Loading Alerts", "Unable to fetch low stock warnings.");
     } finally {
       setIsLoading(false);
     }
@@ -53,32 +54,42 @@ export const LowStockPage: React.FC = () => {
     fetchLowStock();
   }, []);
 
+  useEffect(() => {
+    const totalPages = Math.ceil(lowStockItems.length / pageSize) || 1;
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [lowStockItems.length, currentPage]);
+
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedItems = lowStockItems.slice(startIndex, startIndex + pageSize);
+
   const columns: Column<LowStockItem>[] = [
     {
-      header: 'Product',
+      header: "Product",
       cell: (row) => {
         const prod = productMap[row.productId];
         return (
           <div>
-            <span className="font-bold text-slate-100 block">{prod ? prod.name : `Product #${row.productId}`}</span>
-            <span className="text-xs text-slate-400 font-mono">SKU: {prod ? prod.sku : 'N/A'}</span>
+            <span className="font-bold text-gray-900 block">{prod ? prod.name : `Product #${row.productId}`}</span>
+            <span className="text-xs text-gray-500 font-mono">SKU: {prod ? prod.sku : "N/A"}</span>
           </div>
         );
       },
     },
     {
-      header: 'Warehouse Location',
+      header: "Warehouse Location",
       cell: (row) => {
         const wh = warehouseMap[row.warehouseId];
-        return <span className="font-medium text-slate-300">{wh ? wh.name : `Warehouse #${row.warehouseId}`}</span>;
+        return <span className="font-medium text-gray-600">{wh ? wh.name : `Warehouse #${row.warehouseId}`}</span>;
       },
     },
     {
-      header: 'Available Stock',
-      cell: (row) => <span className="font-bold text-rose-400 text-base">{row.availableQuantity} Units</span>,
+      header: "Available Stock",
+      cell: (row) => <span className="font-bold text-gray-900 text-base">{row.availableQuantity} Units</span>,
     },
     {
-      header: 'Alert Level',
+      header: "Alert Level",
       cell: (row) => renderStockStatusBadge(row.availableQuantity, row.threshold),
     },
   ];
@@ -97,10 +108,16 @@ export const LowStockPage: React.FC = () => {
 
       <DataTable
         columns={columns}
-        data={lowStockItems}
+        data={paginatedItems}
         keyExtractor={(row) => row.id}
         isLoading={isLoading}
         emptyMessage="All warehouse product stock levels are healthy."
+        pagination={{
+          currentPage,
+          totalItems: lowStockItems.length,
+          pageSize,
+          onPageChange: setCurrentPage,
+        }}
       />
     </div>
   );

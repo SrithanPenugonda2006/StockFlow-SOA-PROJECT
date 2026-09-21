@@ -11,6 +11,7 @@ import { Button } from '../../components/common/Button';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { extractErrorMessage } from '../../utils/formatters';
+import { Pagination } from '../../components/common/Pagination';
 
 export const WarehousesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export const WarehousesPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(null);
   const [warehouseToDelete, setWarehouseToDelete] = useState<Warehouse | null>(null);
+  const [page, setPage] = useState<number>(1);
 
   const fetchWarehouses = async () => {
     setIsLoading(true);
@@ -95,27 +97,30 @@ export const WarehousesPage: React.FC = () => {
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-56 bg-slate-900 border border-slate-800 rounded-2xl animate-pulse" />
+            <div key={i} className="h-56 bg-white border border-gray-200 rounded-2xl animate-pulse" />
           ))}
         </div>
       ) : warehouses.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {warehouses.map((wh) => (
-            <WarehouseCard
-              key={wh.id}
-              warehouse={wh}
-              isAdmin={isAdmin}
-              onViewInventory={(w) => navigate(`/inventory?warehouseId=${w.id}`)}
-              onEdit={(w) => {
-                setSelectedWarehouse(w);
-                setIsModalOpen(true);
-              }}
-              onDelete={(w) => setWarehouseToDelete(w)}
-            />
-          ))}
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {warehouses.slice((page - 1) * 5, page * 5).map((wh) => (
+              <WarehouseCard
+                key={wh.id}
+                warehouse={wh}
+                isAdmin={isAdmin}
+                onViewInventory={(w) => navigate(`/inventory?warehouseId=${w.id}`)}
+                onEdit={(w) => {
+                  setSelectedWarehouse(w);
+                  setIsModalOpen(true);
+                }}
+                onDelete={(w) => setWarehouseToDelete(w)}
+              />
+            ))}
+          </div>
+          <Pagination totalItems={warehouses.length} currentPage={page} pageSize={5} onPageChange={setPage} />
         </div>
       ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center text-slate-400">
+        <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center text-gray-500">
           No physical warehouses registered yet.
         </div>
       )}

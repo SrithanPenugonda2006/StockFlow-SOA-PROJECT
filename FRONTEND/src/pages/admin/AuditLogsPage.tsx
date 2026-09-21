@@ -12,6 +12,8 @@ import { formatDate } from '../../utils/formatters';
 export const AuditLogsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState<InventoryTransaction[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
 
   const fetchLogs = async () => {
     setLoading(true);
@@ -29,10 +31,13 @@ export const AuditLogsPage: React.FC = () => {
     fetchLogs();
   }, []);
 
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedLogs = logs.slice(startIndex, startIndex + pageSize);
+
   const columns: Column<InventoryTransaction>[] = [
     {
       header: 'Audit ID',
-      cell: (row) => <span className="font-mono text-xs text-indigo-400 font-bold">AUDIT-{row.id}</span>,
+      cell: (row) => <span className="font-mono text-xs text-[#666666] font-bold">AUDIT-{row.id}</span>,
     },
     {
       header: 'Event Category',
@@ -44,12 +49,12 @@ export const AuditLogsPage: React.FC = () => {
     },
     {
       header: 'Notes / Reference',
-      cell: (row) => <span className="text-xs text-slate-300">{row.reason || 'System operation'}</span>,
+      cell: (row) => <span className="text-xs text-gray-600">{row.reason || 'System operation'}</span>,
     },
     {
       header: 'Timestamp',
       cell: (row) => (
-        <span className="text-xs text-slate-400 font-mono">
+        <span className="text-xs text-gray-500 font-mono">
           {formatDate(row.createdAt || '')}
         </span>
       ),
@@ -71,10 +76,16 @@ export const AuditLogsPage: React.FC = () => {
       <Card title={`Audit Events Trail (${logs.length} Records)`}>
         <DataTable
           columns={columns}
-          data={logs}
+          data={paginatedLogs}
           keyExtractor={(item) => item.id}
           isLoading={loading}
           emptyMessage="No security audit records logged."
+          pagination={{
+            currentPage,
+            totalItems: logs.length,
+            pageSize,
+            onPageChange: setCurrentPage,
+          }}
         />
       </Card>
     </div>

@@ -6,7 +6,7 @@ interface StatCardProps {
   change?: string;
   isPositive?: boolean;
   icon: React.ReactNode;
-  variant?: 'blue' | 'emerald' | 'amber' | 'rose' | 'purple';
+  variant?: 'blue' | 'emerald' | 'amber' | 'rose' | 'purple' | 'neutral';
 }
 
 export const StatCard: React.FC<StatCardProps> = ({
@@ -15,32 +15,35 @@ export const StatCard: React.FC<StatCardProps> = ({
   change,
   isPositive = true,
   icon,
-  variant = 'blue',
+  variant = 'neutral',
 }) => {
   const iconBg = {
-    blue: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-    emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    amber: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    rose: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-    purple: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+    // blue/purple → neutral gray
+    blue:    'bg-[#F5F5F5] text-[#555555] border-[#E5E5E5]',
+    purple:  'bg-[#F5F5F5] text-[#555555] border-[#E5E5E5]',
+    neutral: 'bg-[#F5F5F5] text-[#555555] border-[#E5E5E5]',
+    // semantic colors kept
+    emerald: 'bg-gray-100 text-gray-900 border-gray-100',
+    amber:   'bg-gray-100 text-gray-700 border-gray-100',
+    rose:    'bg-gray-100 text-gray-900 border-gray-100',
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-xl flex items-center justify-between text-left hover:border-slate-700 transition-colors">
+    <div className="bg-white border border-[#E5E5E5] rounded-2xl p-5 flex items-center justify-between text-left hover:border-[#D4D4D4] transition-all duration-150">
       <div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{title}</span>
-        <div className="text-2xl font-black text-slate-100 mt-1">{value}</div>
+        <span className="text-xs font-semibold uppercase tracking-wider text-[#666666]">{title}</span>
+        <div className="text-2xl font-black text-[#111111] mt-1">{value}</div>
         {change && (
           <span
-            className={`inline-block mt-1 text-xs font-medium ${
-              isPositive ? 'text-emerald-400' : 'text-rose-400'
+            className={`inline-block mt-1 text-xs font-semibold ${
+              isPositive ? 'text-gray-900' : 'text-gray-900'
             }`}
           >
             {change}
           </span>
         )}
       </div>
-      <div className={`p-3 rounded-xl border ${iconBg[variant]}`}>{icon}</div>
+      <div className={`p-3 rounded-xl border ${iconBg[variant] ?? iconBg.neutral}`}>{icon}</div>
     </div>
   );
 };

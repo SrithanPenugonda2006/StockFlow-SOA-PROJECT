@@ -51,27 +51,6 @@ export interface ManagerUpdateData {
   warehouseIds: number[];
 }
 
-export interface Organization {
-  id: number;
-  name: string;
-  code: string;
-  status: 'ACTIVE' | 'INACTIVE';
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface UserInvitation {
-  id: number;
-  email: string;
-  role: string;
-  status: string;
-  invitedBy: string;
-  token: string;
-  mustChangePassword?: boolean;
-  message?: string;
-  createdAt: string;
-}
-
 export interface AdminAuditLog {
   id: number;
   actorUsername: string;
@@ -159,52 +138,6 @@ export const adminApi = {
 
   deleteUser: async (id: number): Promise<void> => {
     await apiClient.delete(`/api/admin/users/${id}`);
-  },
-
-  // Organizations
-  getOrganizations: async (): Promise<Organization[]> => {
-    const response = await apiClient.get<Organization[]>('/api/admin/organizations');
-    return response.data;
-  },
-
-  getOrganizationById: async (id: number): Promise<Organization> => {
-    const response = await apiClient.get<Organization>(`/api/admin/organizations/${id}`);
-    return response.data;
-  },
-
-  getOrganizationUsers: async (id: number): Promise<AdminUser[]> => {
-    const response = await apiClient.get<AdminUser[]>(`/api/admin/organizations/${id}/users`);
-    return response.data;
-  },
-
-  createOrganization: async (data: { name: string; code: string; status?: string }): Promise<Organization> => {
-    const response = await apiClient.post<Organization>('/api/admin/organizations', data);
-    return response.data;
-  },
-
-  updateOrganization: async (id: number, data: { name: string; code: string; status?: string }): Promise<Organization> => {
-    const response = await apiClient.put<Organization>(`/api/admin/organizations/${id}`, data);
-    return response.data;
-  },
-
-  updateOrganizationStatus: async (id: number, status: string): Promise<Organization> => {
-    const response = await apiClient.patch<Organization>(`/api/admin/organizations/${id}/status`, { status });
-    return response.data;
-  },
-
-  deleteOrganization: async (id: number): Promise<void> => {
-    await apiClient.delete(`/api/admin/organizations/${id}`);
-  },
-
-  // Invitations
-  getInvitations: async (): Promise<UserInvitation[]> => {
-    const response = await apiClient.get<UserInvitation[]>('/api/admin/invitations');
-    return response.data;
-  },
-
-  createInvitation: async (data: { email: string; role: string }): Promise<UserInvitation> => {
-    const response = await apiClient.post<UserInvitation>('/api/admin/invitations', data);
-    return response.data;
   },
 
   // Audit Logs

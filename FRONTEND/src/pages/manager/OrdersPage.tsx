@@ -26,7 +26,7 @@ export const OrdersPage: React.FC = () => {
   const fetchOrders = async () => {
     setIsLoading(true);
     try {
-      const res = await orderApi.getOrders(currentPage, 10);
+      const res = await orderApi.getOrders(currentPage, 5);
       setOrders(res.content || []);
       setTotalPages(res.totalPages || 1);
       setTotalElements(res.totalElements || 0);
@@ -62,8 +62,8 @@ export const OrdersPage: React.FC = () => {
     <div className="flex flex-col gap-6 text-left">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">Customer Orders Fulfillment</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Manage customer orders and dispatch fulfillment workflows.</p>
+          <h1 className="text-2xl font-black text-gray-900 tracking-tight">Customer Orders Fulfillment</h1>
+          <p className="text-xs text-gray-500 mt-0.5">Manage customer orders and dispatch fulfillment workflows.</p>
         </div>
 
         <Button variant="ghost" onClick={fetchOrders} leftIcon={<RefreshCw className="w-4 h-4" />}>
@@ -83,7 +83,7 @@ export const OrdersPage: React.FC = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         totalElements={totalElements}
-        pageSize={10}
+        pageSize={5} totalItems={totalElements} isZeroBased={true}
         onPageChange={(p) => setCurrentPage(p)}
       />
 

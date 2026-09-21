@@ -63,18 +63,18 @@ export const ForceChangePasswordModal: React.FC<ForceChangePasswordModalProps> =
       title="First-Time Login Security Setup"
     >
       <div className="space-y-4 text-left">
-        <div className="p-3.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs flex items-start gap-2.5">
-          <ShieldAlert className="w-5 h-5 shrink-0 text-indigo-400 mt-0.5" />
+        <div className="p-3.5 rounded-xl bg-[#111111] border border-[#D4D4D4] text-[#111111] text-xs flex items-start gap-2.5">
+          <ShieldAlert className="w-5 h-5 shrink-0 text-[#111111] mt-0.5" />
           <div>
             <p className="font-semibold text-white">Temporary Password Change Required</p>
-            <p className="mt-0.5 text-slate-300">
+            <p className="mt-0.5 text-gray-600">
               For security, newly created manager accounts must update their temporary password before proceeding.
             </p>
           </div>
         </div>
 
         {errorMsg && (
-          <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
+          <div className="p-3 rounded-lg bg-gray-100 border border-gray-800 text-gray-900 text-xs">
             {errorMsg}
           </div>
         )}
@@ -113,7 +113,7 @@ export const ForceChangePasswordModal: React.FC<ForceChangePasswordModalProps> =
               type="button"
               onClick={logout}
               disabled={isSubmitting}
-              className="text-slate-400 hover:text-white"
+              className="text-gray-500 hover:text-white"
             >
               Log Out
             </Button>

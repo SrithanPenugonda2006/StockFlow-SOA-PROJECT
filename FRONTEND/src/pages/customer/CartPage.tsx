@@ -11,12 +11,12 @@ export const CartPage: React.FC = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center max-w-md mx-auto my-12 flex flex-col items-center">
-        <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl mb-4">
+      <div className="bg-white border border-gray-200 rounded-3xl p-12 text-center max-w-md mx-auto my-12 flex flex-col items-center">
+        <div className="p-4 bg-[#F5F5F5] border border-[#E5E5E5] text-[#666666] rounded-2xl mb-4">
           <ShoppingBag className="w-10 h-10" />
         </div>
-        <h2 className="text-xl font-bold text-slate-100">Your Shopping Cart is Empty</h2>
-        <p className="text-xs text-slate-400 mt-2">Explore our catalog to add items for fulfillment.</p>
+        <h2 className="text-xl font-bold text-gray-900">Your Shopping Cart is Empty</h2>
+        <p className="text-xs text-gray-500 mt-2">Explore our catalog to add items for fulfillment.</p>
         <Button onClick={() => navigate('/customer/products')} className="mt-6">
           Browse Product Catalog
         </Button>
@@ -27,49 +27,49 @@ export const CartPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 text-left max-w-4xl mx-auto">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-black text-white tracking-tight">Shopping Cart</h1>
+        <h1 className="text-2xl font-black text-gray-900 tracking-tight">Shopping Cart</h1>
         <button
           onClick={clearCart}
-          className="text-xs text-rose-400 hover:text-rose-300 font-semibold transition-colors"
+          className="text-xs text-gray-900 hover:text-gray-900 font-semibold transition-colors"
         >
           Clear Entire Cart
         </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl divide-y divide-slate-800">
+        <div className="lg:col-span-2 bg-white border border-gray-200 rounded-3xl p-6 shadow-2xl divide-y divide-gray-100">
           {cart.map((item) => (
             <div key={item.productId} className="py-4 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
               <div>
-                <h4 className="font-bold text-slate-100 text-sm">{item.name}</h4>
-                <span className="text-xs text-slate-400 font-mono">SKU: {item.sku}</span>
-                <span className="text-xs text-emerald-400 font-bold block mt-1">{formatCurrency(item.price)}</span>
+                <h4 className="font-bold text-gray-900 text-sm">{item.name}</h4>
+                <span className="text-xs text-gray-500 font-mono">SKU: {item.sku}</span>
+                <span className="text-xs text-gray-900 font-bold block mt-1">{formatCurrency(item.price)}</span>
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex items-center bg-slate-950 rounded-xl border border-slate-800 p-1">
+                <div className="flex items-center bg-[#F7F8FA] rounded-xl border border-gray-200 p-1">
                   <button
                     onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                    className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white font-bold"
+                    className="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-white font-bold"
                   >
                     -
                   </button>
-                  <span className="w-8 text-center text-xs font-bold text-slate-200">{item.quantity}</span>
+                  <span className="w-8 text-center text-xs font-bold text-gray-800">{item.quantity}</span>
                   <button
                     onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                    className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white font-bold"
+                    className="w-7 h-7 flex items-center justify-center text-gray-500 hover:text-white font-bold"
                   >
                     +
                   </button>
                 </div>
 
-                <span className="font-bold text-slate-100 text-sm min-w-[80px] text-right">
+                <span className="font-bold text-gray-900 text-sm min-w-[80px] text-right">
                   {formatCurrency(item.price * item.quantity)}
                 </span>
 
                 <button
                   onClick={() => removeFromCart(item.productId)}
-                  className="p-2 text-slate-500 hover:text-rose-400 rounded-lg transition-colors"
+                  className="p-2 text-gray-400 hover:text-gray-900 rounded-lg transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -79,20 +79,20 @@ export const CartPage: React.FC = () => {
         </div>
 
         {/* Cart Summary */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col justify-between h-fit">
+        <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-2xl flex flex-col justify-between h-fit">
           <div>
-            <h3 className="text-base font-bold text-slate-100 pb-3 border-b border-slate-800">Order Summary</h3>
+            <h3 className="text-base font-bold text-gray-900 pb-3 border-b border-gray-200">Order Summary</h3>
             <div className="py-4 flex justify-between text-sm">
-              <span className="text-slate-400">Subtotal</span>
-              <span className="font-bold text-slate-200">{formatCurrency(totalAmount)}</span>
+              <span className="text-gray-500">Subtotal</span>
+              <span className="font-bold text-gray-800">{formatCurrency(totalAmount)}</span>
             </div>
-            <div className="py-2 flex justify-between text-sm border-t border-slate-800/80">
-              <span className="text-slate-400">Fulfillment Fee</span>
-              <span className="text-xs font-bold text-emerald-400">FREE</span>
+            <div className="py-2 flex justify-between text-sm border-t border-gray-200">
+              <span className="text-gray-500">Fulfillment Fee</span>
+              <span className="text-xs font-bold text-gray-900">FREE</span>
             </div>
-            <div className="pt-4 border-t border-slate-800 flex justify-between text-base">
-              <span className="font-bold text-slate-100">Total Payable</span>
-              <span className="font-black text-emerald-400">{formatCurrency(totalAmount)}</span>
+            <div className="pt-4 border-t border-gray-200 flex justify-between text-base">
+              <span className="font-bold text-gray-900">Total Payable</span>
+              <span className="font-black text-gray-900">{formatCurrency(totalAmount)}</span>
             </div>
           </div>
 

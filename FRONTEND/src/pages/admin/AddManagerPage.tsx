@@ -231,7 +231,7 @@ export const AddManagerPage: React.FC = () => {
         <div>
           <button
             onClick={() => navigate("/admin/managers")}
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 mb-2 transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-800 mb-2 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Managers</span>
@@ -244,15 +244,15 @@ export const AddManagerPage: React.FC = () => {
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+        <div className="p-4 rounded-xl bg-gray-100 border border-gray-800 text-gray-900 text-sm flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-gray-900 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm flex items-center gap-3">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+        <div className="p-4 rounded-xl bg-gray-100 border border-gray-800 text-gray-800 text-sm flex items-center gap-3">
+          <CheckCircle2 className="w-5 h-5 text-gray-900 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -262,16 +262,16 @@ export const AddManagerPage: React.FC = () => {
         <Card title="1. Personal & Contact Details">
           <div className="flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">Full Name *</label>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5">Full Name *</label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   required
                   placeholder="e.g. Vikram Sharma"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-[#F7F8FA] border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#D4D4D4] transition-colors"
                 />
               </div>
             </div>
@@ -280,9 +280,9 @@ export const AddManagerPage: React.FC = () => {
               {/* Email Input with Integrated OTP Verification UI */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-bold text-slate-300">Email Address *</label>
+                  <label className="block text-xs font-bold text-gray-600">Email Address *</label>
                   {verificationStatus === "VERIFIED" && (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-gray-900 bg-gray-900/10 px-2 py-0.5 rounded-md border border-gray-900/20">
                       <CheckCircle2 className="w-3 h-3" />
                       Verified
                     </span>
@@ -291,7 +291,7 @@ export const AddManagerPage: React.FC = () => {
 
                 <div className="flex gap-2">
                   <div className="relative flex-1">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       required
@@ -305,49 +305,48 @@ export const AddManagerPage: React.FC = () => {
                           setOtpError(null);
                         }
                       }}
-                      className={`w-full bg-slate-950 border rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-colors ${
+                      className={`w-full bg-[#F7F8FA] border rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none transition-colors ${
                         verificationStatus === "VERIFIED"
-                          ? "border-emerald-500/50 focus:border-emerald-500"
+                          ? "border-gray-900/50 focus:border-gray-900"
                           : emailFieldError
-                          ? "border-rose-500/50 focus:border-rose-500"
-                          : "border-slate-800 focus:border-indigo-500"
+                          ? "border-gray-900/50 focus:border-gray-900"
+                          : "border-gray-200 focus:border-[#D4D4D4]"
                       }`}
                     />
                   </div>
 
-                  <Button
-                    type="button"
-                    variant={verificationStatus === "VERIFIED" ? "outline" : "secondary"}
-                    disabled={
-                      !email.trim().includes("@") ||
-                      isSendingOtp ||
-                      isVerifyingOtp ||
-                      verificationStatus === "VERIFIED"
-                    }
-                    onClick={handleSendOtp}
-                    className="shrink-0 text-xs px-3.5 py-2.5"
-                  >
-                    {isSendingOtp ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : verificationStatus === "VERIFIED" ? (
-                      "Verified"
-                    ) : verificationStatus === "OTP_SENT" || verificationStatus === "EMAIL_CHANGED" ? (
-                      "Resend OTP"
-                    ) : (
-                      "Send OTP"
-                    )}
-                  </Button>
+                  {verificationStatus !== "VERIFIED" && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={
+                        !email.trim().includes("@") ||
+                        isSendingOtp ||
+                        isVerifyingOtp
+                      }
+                      onClick={handleSendOtp}
+                      className="shrink-0 text-xs px-3.5 py-2.5"
+                    >
+                      {isSendingOtp ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : verificationStatus === "OTP_SENT" || verificationStatus === "EMAIL_CHANGED" ? (
+                        "Resend OTP"
+                      ) : (
+                        "Send OTP"
+                      )}
+                    </Button>
+                  )}
                 </div>
 
                 {emailFieldError && (
-                  <span className="text-[11px] text-rose-400 mt-1.5 block font-medium flex items-center gap-1">
+                  <span className="text-[11px] text-gray-900 mt-1.5 block font-medium flex items-center gap-1">
                     <AlertCircle className="w-3 h-3 shrink-0" />
                     {emailFieldError}
                   </span>
                 )}
 
                 {verificationStatus === "EMAIL_CHANGED" && (
-                  <span className="text-[11px] text-amber-400 mt-1.5 block font-medium flex items-center gap-1">
+                  <span className="text-[11px] text-gray-700 mt-1.5 block font-medium flex items-center gap-1">
                     <AlertCircle className="w-3 h-3 shrink-0" />
                     Email address changed. Please re-verify with a new OTP.
                   </span>
@@ -355,15 +354,15 @@ export const AddManagerPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">Phone Number (Optional)</label>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5">Phone Number (Optional)</label>
                 <div className="relative">
-                  <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Phone className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="tel"
                     placeholder="+91 98765 43210"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full bg-[#F7F8FA] border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#D4D4D4] transition-colors"
                   />
                 </div>
               </div>
@@ -371,13 +370,13 @@ export const AddManagerPage: React.FC = () => {
 
             {/* OTP Entry Section when OTP is sent */}
             {(verificationStatus === "OTP_SENT" || verificationStatus === "FAILED") && (
-              <div className="p-4 rounded-xl bg-slate-950 border border-indigo-500/30 flex flex-col gap-3">
+              <div className="p-4 rounded-xl bg-[#F7F8FA] border border-[#D4D4D4]/30 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
-                    <KeyRound className="w-4 h-4 text-indigo-400" />
+                  <span className="text-xs font-bold text-[#666666] flex items-center gap-1.5">
+                    <KeyRound className="w-4 h-4 text-[#666666]" />
                     Enter 6-Digit Email Verification Code
                   </span>
-                  <span className="text-[11px] text-slate-400">Sent to {email}</span>
+                  <span className="text-[11px] text-gray-500">Sent to {email}</span>
                 </div>
 
                 <div className="flex gap-2">
@@ -387,7 +386,7 @@ export const AddManagerPage: React.FC = () => {
                     placeholder="123456"
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                    className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 font-mono text-center tracking-widest focus:outline-none focus:border-indigo-500"
+                    className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-900 font-mono text-center tracking-widest focus:outline-none focus:border-[#D4D4D4]"
                   />
                   <Button
                     type="button"
@@ -400,10 +399,10 @@ export const AddManagerPage: React.FC = () => {
                 </div>
 
                 {otpSuccess && (
-                  <span className="text-xs text-emerald-400 font-medium">{otpSuccess}</span>
+                  <span className="text-xs text-gray-900 font-medium">{otpSuccess}</span>
                 )}
                 {otpError && (
-                  <span className="text-xs text-rose-400 font-medium flex items-center gap-1">
+                  <span className="text-xs text-gray-900 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3 h-3 shrink-0" />
                     {otpError}
                   </span>
@@ -417,46 +416,46 @@ export const AddManagerPage: React.FC = () => {
         <Card title="2. Account Information">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">Username *</label>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5">Username *</label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   required
                   placeholder="e.g. vsharma"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-[#F7F8FA] border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#D4D4D4] transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">Password *</label>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5">Password *</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   required
                   placeholder="Min 6 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-[#F7F8FA] border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#D4D4D4] transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">Confirm Password *</label>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5">Confirm Password *</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   required
                   placeholder="Re-enter password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-[#F7F8FA] border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#D4D4D4] transition-colors"
                 />
               </div>
             </div>
@@ -467,22 +466,22 @@ export const AddManagerPage: React.FC = () => {
         <Card title="3. Manager Configuration">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">Assigned Role</label>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200">
-                <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0" />
+              <label className="block text-xs font-bold text-gray-600 mb-1.5">Assigned Role</label>
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-800">
+                <ShieldCheck className="w-5 h-5 text-gray-700 shrink-0" />
                 <div>
                   <span className="font-bold text-sm block">MANAGER</span>
-                  <span className="text-xs text-slate-400">Operational warehouse access rights</span>
+                  <span className="text-xs text-gray-500">Operational warehouse access rights</span>
                 </div>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">Account Status</label>
+              <label className="block text-xs font-bold text-gray-600 mb-1.5">Account Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as "ACTIVE" | "INACTIVE")}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-[#F7F8FA] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#D4D4D4]"
               >
                 <option value="ACTIVE">Active (Can authenticate and manage inventory)</option>
                 <option value="INACTIVE">Inactive (Authentication disabled)</option>
@@ -493,12 +492,12 @@ export const AddManagerPage: React.FC = () => {
 
         {/* Card 4: Warehouse Access */}
         <Card title="4. Warehouse Access">
-          <p className="text-xs text-slate-400 mb-4">
+          <p className="text-xs text-gray-500 mb-4">
             Select one or more warehouses this manager is authorized to monitor, reconcile, and manage.
           </p>
 
           {loadingWarehouses ? (
-            <div className="p-4 text-xs text-slate-500 animate-pulse">Loading warehouses from Inventory Service...</div>
+            <div className="p-4 text-xs text-gray-400 animate-pulse">Loading warehouses from Inventory Service...</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {warehouses.map((w) => {
@@ -509,22 +508,22 @@ export const AddManagerPage: React.FC = () => {
                     onClick={() => toggleWarehouse(w.id)}
                     className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start gap-3 ${
                       isSelected
-                        ? "bg-indigo-600/10 border-indigo-500/50 text-slate-100"
-                        : "bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700"
+                        ? "bg-[#111111]/10 border-[#D4D4D4]/50 text-gray-900"
+                        : "bg-[#F7F8FA] border-gray-200 text-gray-500 hover:border-gray-300"
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => {}}
-                      className="mt-1 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500"
+                      className="mt-1 rounded border-gray-300 bg-white text-[#111111] focus:ring-gray-900/20"
                     />
                     <div>
                       <div className="flex items-center gap-2">
-                        <WarehouseIcon className="w-4 h-4 text-indigo-400 shrink-0" />
-                        <span className="font-bold text-sm text-slate-100">{w.name}</span>
+                        <WarehouseIcon className="w-4 h-4 text-[#666666] shrink-0" />
+                        <span className="font-bold text-sm text-gray-900">{w.name}</span>
                       </div>
-                      <span className="text-xs text-slate-400 mt-1 block">{w.location}</span>
+                      <span className="text-xs text-gray-500 mt-1 block">{w.location}</span>
                     </div>
                   </div>
                 );
@@ -534,7 +533,7 @@ export const AddManagerPage: React.FC = () => {
         </Card>
 
         {/* Form Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
           <Button type="button" variant="outline" onClick={() => navigate("/admin/managers")}>
             Cancel
           </Button>

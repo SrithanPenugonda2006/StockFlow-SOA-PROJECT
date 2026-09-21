@@ -58,11 +58,11 @@ export const CheckoutPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6 text-left max-w-3xl mx-auto">
-      <h1 className="text-2xl font-black text-white tracking-tight">Review & Confirm Order</h1>
+      <h1 className="text-2xl font-black text-gray-900 tracking-tight">Review & Confirm Order</h1>
 
       {stockConflict && (
-        <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-rose-300 text-sm flex flex-col gap-2">
-          <div className="flex items-center gap-2 font-bold text-rose-400">
+        <div className="p-4 bg-gray-100 border border-gray-800 rounded-2xl text-gray-900 text-sm flex flex-col gap-2">
+          <div className="flex items-center gap-2 font-bold text-gray-900">
             <AlertTriangle className="w-5 h-5 shrink-0" />
             <span>Stock Conflict Detected</span>
           </div>
@@ -73,21 +73,21 @@ export const CheckoutPage: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl divide-y divide-slate-800">
+      <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-2xl divide-y divide-gray-100">
         <div className="pb-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Customer Identity</h3>
-          <p className="text-sm text-slate-200 font-semibold mt-1">{user?.username} ({user?.role})</p>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">Customer Identity</h3>
+          <p className="text-sm text-gray-800 font-semibold mt-1">{user?.username} ({user?.role})</p>
         </div>
 
         <div className="py-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Order Items</h3>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-3">Order Items</h3>
           <div className="flex flex-col gap-2">
             {cart.map((item) => (
               <div key={item.productId} className="flex justify-between text-sm py-1">
-                <span className="text-slate-300">
-                  {item.name} <strong className="text-slate-500">× {item.quantity}</strong>
+                <span className="text-gray-600">
+                  {item.name} <strong className="text-gray-400">× {item.quantity}</strong>
                 </span>
-                <span className="font-bold text-emerald-400">{formatCurrency(item.price * item.quantity)}</span>
+                <span className="font-bold text-gray-900">{formatCurrency(item.price * item.quantity)}</span>
               </div>
             ))}
           </div>
@@ -95,8 +95,8 @@ export const CheckoutPage: React.FC = () => {
 
         <div className="pt-4 flex justify-between items-center">
           <div>
-            <span className="text-xs text-slate-500 block uppercase font-bold">Total Payment</span>
-            <span className="text-2xl font-black text-emerald-400">{formatCurrency(totalAmount)}</span>
+            <span className="text-xs text-gray-400 block uppercase font-bold">Total Payment</span>
+            <span className="text-2xl font-black text-gray-900">{formatCurrency(totalAmount)}</span>
           </div>
 
           <Button variant="primary" size="lg" onClick={handlePlaceOrder} isLoading={isSubmitting}>

@@ -32,7 +32,7 @@ export const ProductListingPage: React.FC = () => {
     try {
       const res = await productApi.getProducts({
         page: currentPage,
-        size: 9,
+        size: 5,
         name: searchName || undefined,
         category: selectedCategory || undefined,
       });
@@ -70,18 +70,18 @@ export const ProductListingPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 text-left">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-indigo-900/60 via-slate-900 to-slate-900 border border-indigo-500/20 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-[#111111] border border-[#333333] rounded-2xl p-8 shadow-sm relative overflow-hidden">
         <div className="max-w-2xl relative z-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Enterprise Stock Catalog</span>
-          <h1 className="text-3xl font-black text-white mt-1 tracking-tight">Browse Certified Warehouse Inventory</h1>
-          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#666666]">Enterprise Stock Catalog</span>
+          <h1 className="text-3xl font-black text-gray-500 mt-1 tracking-tight">Browse Certified Warehouse Inventory</h1>
+          <p className="text-sm text-gray-600 mt-2 leading-relaxed">
             Real-time stock reservation backed by multi-warehouse fulfillment centers and pessimistic lock safety.
           </p>
         </div>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+      <div className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
         <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 w-full md:w-auto flex-1">
           <Input
             placeholder="Search catalog by product name..."
@@ -111,11 +111,11 @@ export const ProductListingPage: React.FC = () => {
             className="w-44"
           />
 
-          <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div className="flex items-center bg-[#F7F8FA] p-1 rounded-xl border border-gray-200">
             <button
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded-lg transition-colors ${
-                viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                viewMode === 'grid' ? 'bg-[#111111] text-white' : 'text-gray-500 hover:text-gray-800'
               }`}
               title="Grid View"
             >
@@ -124,7 +124,7 @@ export const ProductListingPage: React.FC = () => {
             <button
               onClick={() => setViewMode('table')}
               className={`p-2 rounded-lg transition-colors ${
-                viewMode === 'table' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                viewMode === 'table' ? 'bg-[#111111] text-white' : 'text-gray-500 hover:text-gray-800'
               }`}
               title="Table View"
             >
@@ -143,7 +143,7 @@ export const ProductListingPage: React.FC = () => {
         isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-64 bg-slate-900 border border-slate-800 rounded-2xl animate-pulse" />
+              <div key={i} className="h-64 bg-white border border-gray-200 rounded-2xl animate-pulse" />
             ))}
           </div>
         ) : products.length > 0 ? (
@@ -158,7 +158,7 @@ export const ProductListingPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center text-slate-400">
+          <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center text-gray-500">
             No products found matching your search.
           </div>
         )
@@ -175,7 +175,7 @@ export const ProductListingPage: React.FC = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         totalElements={totalElements}
-        pageSize={9}
+        pageSize={5} totalItems={totalElements} isZeroBased={true}
         onPageChange={(p) => setCurrentPage(p)}
       />
     </div>

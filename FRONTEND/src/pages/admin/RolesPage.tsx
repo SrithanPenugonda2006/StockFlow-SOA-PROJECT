@@ -52,22 +52,22 @@ export const RolesPage: React.FC = () => {
           <Card key={idx} className="flex flex-col h-full justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+                <div className="p-2.5 rounded-xl bg-[#F5F5F5] border border-[#E5E5E5] text-[#666666]">
                   <Shield className="w-5 h-5" />
                 </div>
                 <Badge variant={r.badge}>{r.name}</Badge>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">{r.name} Role</h3>
-              <p className="text-xs text-slate-400 mb-4 leading-relaxed">{r.description}</p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{r.name} Role</h3>
+              <p className="text-xs text-gray-500 mb-4 leading-relaxed">{r.description}</p>
               
-              <div className="border-t border-slate-800/80 pt-4">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">
+              <div className="border-t border-gray-200 pt-4">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block mb-2">
                   Permissions Matrix
                 </span>
                 <ul className="space-y-2">
                   {r.permissions.map((p, pIdx) => (
-                    <li key={pIdx} className="text-xs text-slate-300 flex items-start gap-2">
-                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <li key={pIdx} className="text-xs text-gray-600 flex items-start gap-2">
+                      <Check className="w-3.5 h-3.5 text-gray-900 shrink-0 mt-0.5" />
                       <span>{p}</span>
                     </li>
                   ))}

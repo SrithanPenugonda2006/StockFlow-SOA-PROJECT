@@ -113,8 +113,8 @@ export function evaluatePasswordStrength(password: string): PasswordStrengthResu
       score: 0,
       level: 'Very Weak',
       percentage: 0,
-      colorClass: 'bg-slate-700',
-      textColorClass: 'text-slate-400',
+      colorClass: 'bg-gray-200',
+      textColorClass: 'text-gray-500',
       requirements,
     };
   }
@@ -157,39 +157,39 @@ export function evaluatePasswordStrength(password: string): PasswordStrengthResu
 
   let level: PasswordStrengthLevel = 'Very Weak';
   let percentage = 20;
-  let colorClass = 'bg-rose-500';
-  let textColorClass = 'text-rose-400';
+  let colorClass = 'bg-gray-900';
+  let textColorClass = 'text-gray-900';
 
   switch (normalizedScore) {
     case 0:
       level = 'Very Weak';
       percentage = 20;
-      colorClass = 'bg-rose-500';
-      textColorClass = 'text-rose-400';
+      colorClass = 'bg-gray-900';
+      textColorClass = 'text-gray-900';
       break;
     case 1:
       level = 'Weak';
       percentage = 40;
-      colorClass = 'bg-amber-500';
-      textColorClass = 'text-amber-400';
+      colorClass = 'bg-gray-700';
+      textColorClass = 'text-gray-700';
       break;
     case 2:
       level = 'Fair';
       percentage = 60;
-      colorClass = 'bg-yellow-400';
-      textColorClass = 'text-yellow-300';
+      colorClass = 'bg-gray-700';
+      textColorClass = 'text-gray-600';
       break;
     case 3:
       level = 'Strong';
       percentage = 80;
-      colorClass = 'bg-indigo-500';
-      textColorClass = 'text-indigo-400';
+      colorClass = 'bg-[#111111]';
+      textColorClass = 'text-[#666666]';
       break;
     case 4:
       level = 'Very Strong';
       percentage = 100;
-      colorClass = 'bg-emerald-500';
-      textColorClass = 'text-emerald-400';
+      colorClass = 'bg-gray-900';
+      textColorClass = 'text-gray-900';
       break;
   }
 

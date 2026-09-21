@@ -6,20 +6,27 @@ import {
   Package,
   Warehouse as WarehouseIcon,
   Boxes,
-  AlertTriangle,
+  ArrowRightLeft,
+  Truck,
+  ShoppingBag,
+  Sparkles,
+  Barcode,
+  QrCode,
+  BarChart3,
+  Bell,
   FileCheck2,
   History,
   ShoppingCart,
+  HelpCircle,
   ShieldCheck,
   Users,
   UserCheck,
-  BarChart3,
   Settings as SettingsIcon,
   ChevronRight,
   LogOut,
   User,
   X,
-  Lock,
+  Boxes as StockFlowLogo,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -55,10 +62,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { label: "Products", path: "/products", icon: Package },
     { label: "Warehouses", path: "/warehouses", icon: WarehouseIcon },
     { label: "Inventory", path: "/inventory", icon: Boxes },
-    { label: "Low Stock", path: "/low-stock", icon: AlertTriangle },
+    { label: "Stock Operations", path: "/stock-operations", icon: Boxes },
+    { label: "Transfers", path: "/transfers", icon: ArrowRightLeft },
+    { label: "Procurement", path: "/procurement", icon: ShoppingBag },
+    { label: "Suppliers", path: "/suppliers", icon: Truck },
+    { label: "Smart Inventory", path: "/smart-inventory", icon: Sparkles },
+    { label: "Barcode Scanner", path: "/barcode-scanner", icon: Barcode },
+    { label: "Batch & Serial Tracking", path: "/batches", icon: QrCode },
+    { label: "Analytics", path: "/analytics", icon: BarChart3 },
+    { label: "System Alerts", path: "/alerts", icon: Bell },
     { label: "Reconciliation", path: "/reconciliation", icon: FileCheck2 },
     { label: "Transactions", path: "/transactions", icon: History },
     { label: "Orders", path: "/orders", icon: ShoppingCart },
+    { label: "System Help", path: "/help", icon: HelpCircle },
   ];
 
   // Restructured Administration section items
@@ -110,94 +126,86 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
-  // Single Source of Truth for Exclusive Accordion Behavior:
+  const isAdmin = role === "ADMIN";
+
+  // Auto-expand active admin group on load
   const [openSectionId, setOpenSectionId] = useState<string | null>(() => {
-    for (const group of adminGroups) {
-      if (group.items && group.items.some((item) => location.pathname === item.path)) {
-        return group.id;
-      }
-    }
-    return null;
+    const activeGroup = adminGroups.find((g) =>
+      g.items?.some((sub) => location.pathname === sub.path)
+    );
+    return activeGroup ? activeGroup.id : "managers";
   });
 
-  // Auto-expand current active nested section on location change
   useEffect(() => {
-    adminGroups.forEach((group) => {
-      if (group.items && group.items.some((item) => location.pathname === item.path)) {
-        setOpenSectionId(group.id);
-      }
-    });
+    const activeGroup = adminGroups.find((g) =>
+      g.items?.some((sub) => location.pathname === sub.path)
+    );
+    if (activeGroup) {
+      setOpenSectionId(activeGroup.id);
+    }
   }, [location.pathname]);
 
-  // Exclusive Accordion Toggle logic
-  const toggleGroup = (groupId: string) => {
-    setOpenSectionId((prev) => (prev === groupId ? null : groupId));
+  const toggleGroup = (id: string) => {
+    setOpenSectionId((prev) => (prev === id ? null : id));
   };
 
-  const handleCollapsedGroupClick = (groupId: string) => {
+  const handleCollapsedGroupClick = (id: string) => {
     if (onToggleExpand) {
       onToggleExpand();
     }
-    setOpenSectionId(groupId);
+    setOpenSectionId(id);
   };
-
-  const isAdmin = role?.toUpperCase() === "ADMIN" || role?.toUpperCase() === "ROLE_ADMIN";
 
   return (
     <aside
       id="sidebar-navigation"
-      aria-label="Sidebar Navigation"
-      className={`bg-slate-950 border-r border-slate-800/80 flex flex-col h-full text-left shrink-0 transition-all duration-300 ease-in-out ${
-        isCollapsed ? "w-20" : "w-64"
+      className={`bg-[#050505] text-[#D1D5DB] border-r border-[#262626] flex flex-col h-full transition-all duration-300 z-40 select-none ${
+        isCollapsed ? "w-16 sm:w-20" : "w-64 sm:w-72"
       }`}
     >
-      {/* Brand Header */}
-      <div className={`p-4 sm:p-6 border-b border-slate-800/80 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
-        <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-3"}`}>
-          <div
-            className="p-2.5 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-lg shadow-indigo-600/30 text-white shrink-0"
-            title="StockFlow Inventory SaaS"
-          >
-            <Boxes className="w-6 h-6" />
+      {/* Top Header Logo */}
+      <div className="p-4 sm:p-5 border-b border-[#262626] flex items-center justify-between">
+        <NavLink to="/dashboard" onClick={onCloseMobile} className="flex items-center gap-3 group">
+          <div className="p-2 rounded-xl bg-[#111111] text-white group-hover:scale-105 transition-transform shrink-0">
+            <StockFlowLogo className="w-5 h-5" />
           </div>
           {!isCollapsed && (
-            <div className="overflow-hidden">
-              <h1 className="text-lg font-black tracking-tight text-white leading-none truncate">StockFlow</h1>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-400 truncate block mt-0.5">
-                Inventory SaaS
+            <div className="flex flex-col text-left">
+              <span className="text-base font-extrabold tracking-wide text-white uppercase font-sans">
+                STOCKFLOW
+              </span>
+              <span className="text-[10px] font-semibold text-[#9CA3AF] tracking-widest uppercase">
+                INVENTORY SAAS
               </span>
             </div>
           )}
-        </div>
-        {!isCollapsed && onCloseMobile && (
+        </NavLink>
+
+        {/* Mobile Close Button */}
+        {onCloseMobile && (
           <button
             onClick={onCloseMobile}
-            className="md:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-900 transition-colors"
-            title="Close Sidebar"
-            aria-label="Close Sidebar"
+            className="md:hidden p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#171717] transition-colors"
+            title="Close sidebar"
+            aria-label="Close sidebar"
           >
             <X className="w-5 h-5" />
           </button>
         )}
       </div>
 
-      {/* Navigation List - Vertical Scroll Only, No Horizontal Scroll */}
-      <div className={`flex-1 overflow-y-auto overflow-x-hidden ${isCollapsed ? "px-2.5 py-4" : "px-4 py-6"} flex flex-col gap-6`}>
-        {/* MANAGEMENT SECTION */}
-        <div className="flex flex-col gap-1.5">
-          {!isCollapsed ? (
-            <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1 block">
-              Management
+      {/* Nav List Scroll Area */}
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 custom-scrollbar text-left">
+        {/* Operations Section */}
+        <div className="space-y-1">
+          {!isCollapsed && (
+            <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-2 block">
+              Operations
             </span>
-          ) : (
-            <div className="flex justify-center mb-1">
-              <span className="w-5 h-0.5 bg-slate-800 rounded-full" title="Management" />
-            </div>
           )}
 
           {managementItems.map((item) => {
             const Icon = item.icon;
-
             if (isCollapsed) {
               return (
                 <NavLink
@@ -208,10 +216,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   title={item.label}
                   aria-label={item.label}
                   className={({ isActive }) =>
-                    `flex items-center justify-center w-12 h-12 mx-auto rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    `flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 ${
                       isActive
-                        ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 font-semibold"
-                        : "text-slate-400 hover:text-slate-100 hover:bg-slate-900"
+                        ? "bg-[#1F1F1F] text-white font-semibold border border-[#333333]"
+                        : "text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-[#171717]"
                     }`
                   }
                 >
@@ -227,40 +235,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 end
                 onClick={onCloseMobile}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  `flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
                     isActive
-                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 font-semibold"
-                      : "text-slate-400 hover:text-slate-100 hover:bg-slate-900"
+                      ? "bg-[#1F1F1F] text-white font-semibold border border-[#333333]"
+                      : "text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-[#171717]"
                   }`
                 }
               >
                 <Icon className="w-4 h-4 shrink-0" />
-                <span>{item.label}</span>
+                <span className="truncate">{item.label}</span>
               </NavLink>
             );
           })}
         </div>
 
-        {/* ADMINISTRATION SECTION (ADMIN ONLY) */}
+        {/* Administration Section (ADMIN Only) */}
         {isAdmin && (
-          <div className="flex flex-col gap-1.5 border-t border-slate-800/80 pt-4">
+          <div className="space-y-1 pt-3 border-t border-[#262626]">
             {!isCollapsed ? (
-              <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-indigo-400 mb-1 flex items-center justify-between">
+              <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] mb-2 flex items-center justify-between">
                 <span>Administration</span>
-                <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-[9px] font-bold text-indigo-300">
+                <span className="px-1.5 py-0.5 rounded bg-[#2A2A2A] text-[9px] font-bold text-[#9CA3AF] border border-[#333333]">
                   ADMIN
                 </span>
               </span>
             ) : (
-              <div className="flex justify-center mb-1">
-                <span className="w-5 h-0.5 bg-indigo-500/40 rounded-full" title="Administration" />
+              <div className="flex justify-center mb-2">
+                <span className="w-5 h-0.5 bg-gray-600 rounded-full" title="Administration" />
               </div>
             )}
 
             {adminGroups.map((group) => {
               const Icon = group.icon;
 
-              // Direct link group (non-expandable)
               if (group.path && !group.items) {
                 if (isCollapsed) {
                   return (
@@ -272,10 +279,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       title={group.label}
                       aria-label={group.label}
                       className={({ isActive }) =>
-                        `flex items-center justify-center w-12 h-12 mx-auto rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                        `flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 ${
                           isActive
-                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 font-semibold"
-                            : "text-slate-400 hover:text-slate-100 hover:bg-slate-900"
+                            ? "bg-[#1F1F1F] text-white font-semibold border border-[#333333]"
+                            : "text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-[#171717]"
                         }`
                       }
                     >
@@ -291,20 +298,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     end
                     onClick={onCloseMobile}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      `flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
                         isActive
-                          ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 font-semibold"
-                          : "text-slate-400 hover:text-slate-100 hover:bg-slate-900"
+                          ? "bg-[#1F1F1F] text-white font-semibold border border-[#333333]"
+                          : "text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-[#171717]"
                       }`
                     }
                   >
                     <Icon className="w-4 h-4 shrink-0" />
-                    <span>{group.label}</span>
+                    <span className="truncate">{group.label}</span>
                   </NavLink>
                 );
               }
 
-              // Collapsible group with exclusive accordion behavior
               const isOpen = openSectionId === group.id;
               const isAnySubActive = group.items?.some((sub) => location.pathname === sub.path);
 
@@ -315,10 +321,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => handleCollapsedGroupClick(group.id)}
                     title={`${group.label} (Click to expand)`}
                     aria-label={`${group.label} (Click to expand)`}
-                    className={`flex items-center justify-center w-12 h-12 mx-auto rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    className={`flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 ${
                       isAnySubActive
-                        ? "bg-indigo-600/30 text-indigo-400 border border-indigo-500/40 font-semibold"
-                        : "text-slate-400 hover:text-slate-100 hover:bg-slate-900"
+                        ? "bg-[#1F1F1F] text-white border border-[#333333] font-semibold"
+                        : "text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-[#171717]"
                     }`}
                   >
                     <Icon className="w-5 h-5 shrink-0" />
@@ -332,10 +338,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => toggleGroup(group.id)}
                     aria-expanded={isOpen}
                     aria-controls={`submenu-${group.id}`}
-                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 w-full text-left cursor-pointer focus:outline-none ${
+                    className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 w-full text-left cursor-pointer focus:outline-none ${
                       isAnySubActive
-                        ? "text-indigo-400 font-semibold bg-slate-900/80"
-                        : "text-slate-400 hover:text-slate-100 hover:bg-slate-900"
+                        ? "text-white font-semibold bg-[#1F1F1F]"
+                        : "text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-[#171717]"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -343,17 +349,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <span>{group.label}</span>
                     </div>
                     <ChevronRight
-                      className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${
-                        isOpen ? "rotate-90 text-indigo-400" : ""
+                      className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-200 ${
+                        isOpen ? "rotate-90 text-white" : ""
                       }`}
                     />
                   </button>
 
-                  {/* Accordion Sub-items panel */}
                   {isOpen && group.items && (
                     <div
                       id={`submenu-${group.id}`}
-                      className="ml-4 pl-3 border-l border-slate-800 flex flex-col gap-1 py-1 transition-all duration-200 ease-in-out"
+                      className="ml-4 pl-3 border-l border-[#262626] flex flex-col gap-1 py-1 transition-all duration-200 ease-in-out"
                     >
                       {group.items.map((sub) => (
                         <NavLink
@@ -364,8 +369,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           className={({ isActive }) =>
                             `px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
                               isActive
-                                ? "bg-indigo-600/90 text-white font-semibold shadow-md shadow-indigo-600/20"
-                                : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60"
+                                ? "bg-[#1F1F1F] text-white font-semibold border border-[#333333]"
+                                : "text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-[#171717]"
                             }`
                           }
                         >
@@ -382,18 +387,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Bottom Profile Footer */}
-      <div className="p-3 sm:p-4 border-t border-slate-800/80 bg-slate-900/50">
+      <div className="p-3 sm:p-4 border-t border-[#262626] bg-[#111111]">
         {isCollapsed ? (
           <div className="flex flex-col items-center gap-2">
             <div
-              className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-indigo-400"
+              className="p-2 rounded-xl bg-[#171717] border border-[#262626] text-[#9CA3AF]"
               title={`${user?.username || "User"} (${role})`}
             >
               <User className="w-4 h-4" />
             </div>
             <button
               onClick={logout}
-              className="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors"
+              className="p-2 text-[#9CA3AF] hover:text-gray-900 hover:bg-[#171717] rounded-lg transition-colors cursor-pointer"
               title="Sign Out"
               aria-label="Sign Out"
             >
@@ -401,19 +406,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800">
+          <div className="flex items-center justify-between p-2 rounded-xl bg-[#171717] border border-[#262626]">
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+              <div className="p-2 rounded-lg bg-[#2A2A2A] border border-[#333333] text-[#9CA3AF]">
                 <User className="w-4 h-4" />
               </div>
               <div className="overflow-hidden">
-                <span className="text-xs font-bold text-slate-200 block truncate">{user?.username}</span>
-                <span className="text-[10px] uppercase font-bold text-indigo-400">{role}</span>
+                <span className="text-xs font-bold text-white block truncate">{user?.username}</span>
+                <span className="text-[10px] uppercase font-bold text-[#9CA3AF]">{role}</span>
               </div>
             </div>
             <button
               onClick={logout}
-              className="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors"
+              className="p-2 text-[#9CA3AF] hover:text-gray-900 hover:bg-[#1F1F1F] rounded-lg transition-colors cursor-pointer"
               title="Sign Out"
               aria-label="Sign Out"
             >

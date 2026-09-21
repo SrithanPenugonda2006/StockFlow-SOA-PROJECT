@@ -212,7 +212,8 @@ public class OrderService {
         dto.setCreatedAt(order.getCreatedAt());
         dto.setUpdatedAt(order.getUpdatedAt());
 
-        List<OrderDTO.OrderItemDTO> itemDtos = order.getItems().stream().map(item -> {
+        List<OrderItem> itemsList = order.getItems() != null ? order.getItems() : java.util.Collections.emptyList();
+        List<OrderDTO.OrderItemDTO> itemDtos = itemsList.stream().map(item -> {
             OrderDTO.OrderItemDTO itemDto = new OrderDTO.OrderItemDTO();
             itemDto.setId(item.getId());
             itemDto.setProductId(item.getProductId());
