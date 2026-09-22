@@ -226,7 +226,7 @@ export const ProcurementPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={fetchProcurementData}
-            className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-white hover:bg-gray-100 transition-colors"
+            className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
             title="Refresh Data"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -250,7 +250,7 @@ export const ProcurementPage: React.FC = () => {
               <ShoppingBag className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{totalPOs}</p>
+          <p className="text-2xl font-bold text-gray-900 mt-2">{totalPOs}</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-white/60 border border-gray-200 backdrop-blur-sm">
@@ -280,7 +280,7 @@ export const ProcurementPage: React.FC = () => {
               <IndianRupee className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-2">
+          <p className="text-2xl font-bold text-gray-900 mt-2">
             ₹{totalSpend.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
         </div>
@@ -295,7 +295,7 @@ export const ProcurementPage: React.FC = () => {
             placeholder="Search by PO number, supplier, or warehouse..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
           />
         </div>
 
@@ -349,7 +349,7 @@ export const ProcurementPage: React.FC = () => {
               ) : (
                 paginatedOrders.map((po) => (
                   <tr key={po.id} className="hover:bg-gray-100/40 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white flex items-center gap-2">
+                    <td className="px-6 py-4 font-bold text-gray-900 flex items-center gap-2">
                       <ShoppingBag className="w-4 h-4 text-[#666666] shrink-0" />
                       {po.poNumber}
                     </td>
@@ -404,7 +404,7 @@ export const ProcurementPage: React.FC = () => {
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 text-gray-500 hover:text-white hover:bg-gray-100 rounded-xl transition-colors"
+                className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -427,7 +427,7 @@ export const ProcurementPage: React.FC = () => {
                   <select
                     value={selectedSupplierId}
                     onChange={(e) => setSelectedSupplierId(e.target.value ? Number(e.target.value) : '')}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                     required
                   >
                     <option value="">Select Supplier</option>
@@ -447,7 +447,7 @@ export const ProcurementPage: React.FC = () => {
                   <select
                     value={selectedWarehouseId}
                     onChange={(e) => setSelectedWarehouseId(e.target.value ? Number(e.target.value) : '')}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                     required
                   >
                     <option value="">Select Destination Warehouse</option>
@@ -483,7 +483,7 @@ export const ProcurementPage: React.FC = () => {
                       <select
                         value={item.productId}
                         onChange={(e) => handleItemChange(index, 'productId', e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-white focus:outline-none focus:ring-1 focus:ring-gray-900/20"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900/20"
                         required
                       >
                         <option value={0}>Select Product</option>
@@ -502,7 +502,7 @@ export const ProcurementPage: React.FC = () => {
                         min="1"
                         value={item.quantity}
                         onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-white focus:outline-none focus:ring-1 focus:ring-gray-900/20"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900/20"
                         required
                       />
                     </div>
@@ -515,7 +515,7 @@ export const ProcurementPage: React.FC = () => {
                         min="0"
                         value={item.unitCost}
                         onChange={(e) => handleItemChange(index, 'unitCost', e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-white focus:outline-none focus:ring-1 focus:ring-gray-900/20"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900/20"
                         required
                       />
                     </div>
@@ -548,7 +548,7 @@ export const ProcurementPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-500 hover:text-white text-xs font-semibold transition-colors"
+                  className="px-4 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-500 hover:text-gray-900 text-xs font-semibold transition-colors"
                 >
                   Cancel
                 </button>

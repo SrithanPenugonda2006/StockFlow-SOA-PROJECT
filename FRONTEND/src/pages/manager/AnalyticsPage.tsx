@@ -76,7 +76,7 @@ export const AnalyticsPage: React.FC = () => {
 
         <button
           onClick={fetchAnalyticsData}
-          className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-white hover:bg-gray-100 transition-colors w-fit"
+          className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors w-fit"
           title="Refresh Analytics"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -104,7 +104,7 @@ export const AnalyticsPage: React.FC = () => {
               <Building2 className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{overallOccupancyPct}%</p>
+          <p className="text-2xl font-bold text-gray-900 mt-2">{overallOccupancyPct}%</p>
           <span className="text-xs text-gray-500 mt-1 block">
             {totalOccupied.toLocaleString()} / {totalCapacity.toLocaleString()} units
           </span>
@@ -117,7 +117,7 @@ export const AnalyticsPage: React.FC = () => {
               <Building2 className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{warehouses.length}</p>
+          <p className="text-2xl font-bold text-gray-900 mt-2">{warehouses.length}</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-white/60 border border-gray-200 backdrop-blur-sm">
@@ -127,7 +127,7 @@ export const AnalyticsPage: React.FC = () => {
               <Boxes className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{products.length}</p>
+          <p className="text-2xl font-bold text-gray-900 mt-2">{products.length}</p>
         </div>
       </div>
 
@@ -148,7 +148,7 @@ export const AnalyticsPage: React.FC = () => {
               return (
                 <div key={w.id} className="space-y-1.5 p-3 rounded-xl bg-[#F7F8FA]/60 border border-gray-200">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-white">{w.name} ({w.code})</span>
+                    <span className="font-bold text-gray-900">{w.name} ({w.code})</span>
                     <span className="font-mono text-[#666666] font-semibold">{pct}% Occupied</span>
                   </div>
 

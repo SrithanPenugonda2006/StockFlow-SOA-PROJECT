@@ -126,7 +126,7 @@ export const SuppliersPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={fetchSuppliers}
-            className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-white hover:bg-gray-100 transition-colors"
+            className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
             title="Refresh Suppliers"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -150,7 +150,7 @@ export const SuppliersPage: React.FC = () => {
               <Truck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-2">{suppliers.length}</p>
+          <p className="text-2xl font-bold text-gray-900 mt-2">{suppliers.length}</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-white/60 border border-gray-200 backdrop-blur-sm">
@@ -183,7 +183,7 @@ export const SuppliersPage: React.FC = () => {
             placeholder="Search suppliers by name, code, contact, or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
           />
         </div>
       </div>
@@ -298,7 +298,7 @@ export const SuppliersPage: React.FC = () => {
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 text-gray-500 hover:text-white hover:bg-gray-100 rounded-xl transition-colors"
+                className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -323,7 +323,7 @@ export const SuppliersPage: React.FC = () => {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Apex Global Logistics"
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                    className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                   />
                 </div>
 
@@ -337,7 +337,7 @@ export const SuppliersPage: React.FC = () => {
                     value={formData.code}
                     onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                     placeholder="e.g. SUP-101"
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                    className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                   />
                 </div>
               </div>
@@ -352,7 +352,7 @@ export const SuppliersPage: React.FC = () => {
                     value={formData.contactName}
                     onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
                     placeholder="e.g. John Doe"
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                    className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                   />
                 </div>
 
@@ -365,7 +365,7 @@ export const SuppliersPage: React.FC = () => {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="e.g. +91 9876543210"
-                    className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                    className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                   />
                 </div>
               </div>
@@ -379,7 +379,7 @@ export const SuppliersPage: React.FC = () => {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="e.g. orders@apexglobal.com"
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 />
               </div>
 
@@ -392,7 +392,7 @@ export const SuppliersPage: React.FC = () => {
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="e.g. Plot 42, Industrial Zone, Bengaluru"
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 />
               </div>
 
@@ -401,7 +401,7 @@ export const SuppliersPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-500 hover:text-white text-xs font-semibold transition-colors"
+                  className="px-4 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-500 hover:text-gray-900 text-xs font-semibold transition-colors"
                 >
                   Cancel
                 </button>

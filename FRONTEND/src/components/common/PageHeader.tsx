@@ -16,9 +16,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 ${className}`}>
       <div className="text-left">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">{title}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#000000] tracking-tight">{title}</h1>
         {subtitle && (
-          <p className="text-xs sm:text-sm text-gray-500 mt-1 font-normal">{subtitle}</p>
+          <p className="text-xs sm:text-sm text-[#525252] mt-1 font-normal">{subtitle}</p>
         )}
       </div>
 

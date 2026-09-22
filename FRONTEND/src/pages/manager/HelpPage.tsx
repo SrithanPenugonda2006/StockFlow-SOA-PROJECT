@@ -101,37 +101,37 @@ export const HelpPage: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
           <div className="p-3.5 rounded-xl bg-[#F7F8FA]/80 border border-gray-200">
-            <span className="font-bold text-white text-xs block">API Gateway</span>
+            <span className="font-bold text-gray-900 text-xs block">API Gateway</span>
             <span className="text-[11px] text-[#666666] font-mono block">Port 8080</span>
             <p className="text-[11px] text-gray-500 mt-1">Central JWT auth routing & rate limiting.</p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#F7F8FA]/80 border border-gray-200">
-            <span className="font-bold text-white text-xs block">Auth Service</span>
+            <span className="font-bold text-gray-900 text-xs block">Auth Service</span>
             <span className="text-[11px] text-[#666666] font-mono block">Port 8081</span>
             <p className="text-[11px] text-gray-500 mt-1">User identity, role RBAC, OTP verification.</p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#F7F8FA]/80 border border-gray-200">
-            <span className="font-bold text-white text-xs block">Product Service</span>
+            <span className="font-bold text-gray-900 text-xs block">Product Service</span>
             <span className="text-[11px] text-[#666666] font-mono block">Port 8082</span>
             <p className="text-[11px] text-gray-500 mt-1">Catalog master data, SKU, Barcode, Pricing.</p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#F7F8FA]/80 border border-gray-200">
-            <span className="font-bold text-white text-xs block">Inventory Service</span>
+            <span className="font-bold text-gray-900 text-xs block">Inventory Service</span>
             <span className="text-[11px] text-[#666666] font-mono block">Port 8083</span>
             <p className="text-[11px] text-gray-500 mt-1">Warehouse stock, transfers, procurement, audit.</p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#F7F8FA]/80 border border-gray-200">
-            <span className="font-bold text-white text-xs block">Order Service</span>
+            <span className="font-bold text-gray-900 text-xs block">Order Service</span>
             <span className="text-[11px] text-[#666666] font-mono block">Port 8084</span>
             <p className="text-[11px] text-gray-500 mt-1">Customer order processing & stock reservation.</p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#F7F8FA]/80 border border-gray-200">
-            <span className="font-bold text-white text-xs block">Eureka Registry</span>
+            <span className="font-bold text-gray-900 text-xs block">Eureka Registry</span>
             <span className="text-[11px] text-[#666666] font-mono block">Port 8761</span>
             <p className="text-[11px] text-gray-500 mt-1">Dynamic microservice name resolution.</p>
           </div>

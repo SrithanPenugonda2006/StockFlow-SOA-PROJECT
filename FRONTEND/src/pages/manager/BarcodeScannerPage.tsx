@@ -143,7 +143,7 @@ export const BarcodeScannerPage: React.FC = () => {
               placeholder="Scan Barcode or enter SKU / Product Name..."
               value={scanInput}
               onChange={(e) => setScanInput(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 rounded-xl bg-[#F7F8FA] border border-gray-200 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20 font-mono"
+              className="w-full pl-11 pr-4 py-3 rounded-xl bg-[#F7F8FA] border border-gray-200 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20 font-mono"
             />
           </div>
           <button
@@ -172,7 +172,7 @@ export const BarcodeScannerPage: React.FC = () => {
             const prod = products.find((p) => p.id === Number(e.target.value));
             if (prod) handleSelectProduct(prod);
           }}
-          className="px-4 py-2 rounded-xl bg-white border border-gray-200 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+          className="px-4 py-2 rounded-xl bg-white border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
         >
           {products.map((p) => (
             <option key={p.id} value={p.id}>
@@ -221,7 +221,7 @@ export const BarcodeScannerPage: React.FC = () => {
 
             <button
               onClick={() => window.print()}
-              className="w-full py-2.5 rounded-xl bg-[#F7F8FA] hover:bg-gray-100 border border-gray-200 text-gray-600 hover:text-white text-xs font-semibold transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-xl bg-[#F7F8FA] hover:bg-gray-100 border border-gray-200 text-gray-600 hover:text-gray-900 text-xs font-semibold transition-colors flex items-center justify-center gap-2"
             >
               <Printer className="w-4 h-4" />
               Print Standard Label Tag

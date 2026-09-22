@@ -56,7 +56,7 @@ export const BatchesSerialView: React.FC = () => {
     <div className="space-y-6 text-left">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">
+        <h1 className="text-3xl font-bold text-[#000000] tracking-tight">
           Batches & Serial Number Tracking
         </h1>
         <p className="text-sm text-gray-500 mt-1">
@@ -76,7 +76,7 @@ export const BatchesSerialView: React.FC = () => {
             placeholder="Search Batch #, Serial #, Product..."
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20 font-mono"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20 font-mono"
           />
         </div>
 
@@ -86,7 +86,7 @@ export const BatchesSerialView: React.FC = () => {
           </span>
           <button
             onClick={fetchBatches}
-            className="p-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-500 hover:text-white hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
             title="Refresh Data"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -141,7 +141,7 @@ export const BatchesSerialView: React.FC = () => {
                     <td className="px-6 py-4 font-mono text-gray-600 text-xs whitespace-nowrap">
                       {b.serialNumber || 'N/A'}
                     </td>
-                    <td className="px-6 py-4 font-bold text-white whitespace-nowrap">
+                    <td className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap">
                       {b.productName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -149,7 +149,7 @@ export const BatchesSerialView: React.FC = () => {
                         {b.warehouseName || `WH-${b.warehouseId}`}
                       </span>
                     </td>
-                    <td className="px-6 py-4 font-bold text-white font-mono">
+                    <td className="px-6 py-4 font-bold text-gray-900 font-mono">
                       {b.quantity}
                     </td>
                     <td className="px-6 py-4 text-xs font-mono text-gray-500 whitespace-nowrap">

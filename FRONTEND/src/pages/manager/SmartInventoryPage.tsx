@@ -78,7 +78,7 @@ export const SmartInventoryPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={fetchSmartInventory}
-            className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-white hover:bg-gray-100 transition-colors"
+            className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
             title="Recalculate Metrics"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -221,7 +221,7 @@ export const SmartInventoryPage: React.FC = () => {
                   <tr key={item.productId} className="hover:bg-gray-100/40 transition-colors">
                     <td className="px-6 py-4">
                       <div>
-                        <span className="font-bold text-white block">{item.productName || `Product #${item.productId}`}</span>
+                        <span className="font-bold text-gray-900 block">{item.productName || `Product #${item.productId}`}</span>
                         <span className="text-xs text-[#666666] font-mono">{item.sku}</span>
                       </div>
                     </td>

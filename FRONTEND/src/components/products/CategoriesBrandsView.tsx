@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   FolderTree,
   Layers,
@@ -10,61 +10,88 @@ import {
   X,
   AlertCircle,
   Building2,
-  CheckCircle2,
   Globe,
-  Tag,
   Package,
 } from 'lucide-react';
+
 import { categoryBrandApi } from '../../api/categoryBrandApi';
 import { productApi } from '../../api/productApi';
 import { CategoryItem, BrandItem } from '../../types/categoryBrand';
-import { Pagination } from '../common/Pagination';
 import { Product } from '../../types/product';
+import { Pagination } from '../common/Pagination';
 
 interface CategoriesBrandsViewProps {
   onSelectCategory?: (category: string) => void;
 }
 
-export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = () => {
-  const [activeTab, setActiveTab] = useState<'CATEGORIES' | 'BRANDS'>('CATEGORIES');
-  
+const PAGE_SIZE = 6;
+
+export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = ({
+  onSelectCategory,
+}) => {
+  const [activeTab, setActiveTab] = useState<'CATEGORIES' | 'BRANDS'>(
+    'CATEGORIES'
+  );
+
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [brands, setBrands] = useState<BrandItem[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Search queries
+  // Search and pagination
   const [categorySearch, setCategorySearch] = useState('');
+  const [brandSearch, setBrandSearch] = useState('');
   const [catPage, setCatPage] = useState(1);
   const [brandPage, setBrandPage] = useState(1);
-  const [brandSearch, setBrandSearch] = useState('');
 
-  // Modals state
+  // Modal state
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<CategoryItem | null>(null);
+
+  const [editingCategory, setEditingCategory] =
+    useState<CategoryItem | null>(null);
   const [editingBrand, setEditingBrand] = useState<BrandItem | null>(null);
 
-  // Form states
-  const [categoryForm, setCategoryForm] = useState({ name: '', description: '' });
-  const [brandForm, setBrandForm] = useState({ name: '', country: '', status: 'ACTIVE' as 'ACTIVE' | 'INACTIVE', description: '' });
-  
+  // Form state
+  const [categoryForm, setCategoryForm] = useState({
+    name: '',
+    description: '',
+  });
+
+  const [brandForm, setBrandForm] = useState<{
+    name: string;
+    country: string;
+    status: 'ACTIVE' | 'INACTIVE';
+    description: string;
+  }>({
+    name: '',
+    country: '',
+    status: 'ACTIVE',
+    description: '',
+  });
+
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
 
+  // ------------------------------------------------------------
+  // FETCH DATA
+  // ------------------------------------------------------------
+
   const fetchAllData = async () => {
     setLoading(true);
+
     try {
       const [catsRes, brandsRes, prodsRes] = await Promise.all([
         categoryBrandApi.getCategories(),
         categoryBrandApi.getBrands(),
         productApi.getProducts({ size: 100 }),
       ]);
-      setCategories(catsRes || []);
-      setBrands(brandsRes || []);
-      setProducts(prodsRes?.content || []);
+
+      setCategories(Array.isArray(catsRes) ? catsRes : []);
+      setBrands(Array.isArray(brandsRes) ? brandsRes : []);
+      setProducts(Array.isArray(prodsRes?.content) ? prodsRes.content : []);
     } catch (err) {
-      console.error('Failed to load categories & brands data', err);
+      console.error('Failed to load categories & brands data:', err);
     } finally {
       setLoading(false);
     }
@@ -74,481 +101,791 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = () => {
     fetchAllData();
   }, []);
 
-  // Filtered lists
+  // ------------------------------------------------------------
+  // FILTERED DATA
+  // ------------------------------------------------------------
+
   const filteredCategories = useMemo(() => {
-    const q = categorySearch.trim().toLowerCase();
-    if (!q) return categories;
-    return categories.filter(
-      (c) => c.name.toLowerCase().includes(q) || (c.description && c.description.toLowerCase().includes(q))
-    );
+    const query = categorySearch.trim().toLowerCase();
+
+    if (!query) {
+      return categories;
+    }
+
+    return categories.filter((category) => {
+      const name = category.name?.toLowerCase() || '';
+      const description = category.description?.toLowerCase() || '';
+
+      return (
+        name.includes(query) ||
+        description.includes(query)
+      );
+    });
   }, [categories, categorySearch]);
 
   const filteredBrands = useMemo(() => {
-    const q = brandSearch.trim().toLowerCase();
-    if (!q) return brands;
-    return brands.filter(
-      (b) =>
-        b.name.toLowerCase().includes(q) ||
-        (b.country && b.country.toLowerCase().includes(q)) ||
-        (b.description && b.description.toLowerCase().includes(q))
-    );
+    const query = brandSearch.trim().toLowerCase();
+
+    if (!query) {
+      return brands;
+    }
+
+    return brands.filter((brand) => {
+      const name = brand.name?.toLowerCase() || '';
+      const country = brand.country?.toLowerCase() || '';
+      const description = brand.description?.toLowerCase() || '';
+
+      return (
+        name.includes(query) ||
+        country.includes(query) ||
+        description.includes(query)
+      );
+    });
   }, [brands, brandSearch]);
 
-  // Metric calculations
-  const totalCatalogSkus = products.length;
-  const productsWithCategory = products.filter((p) => p.category && p.category.trim() !== '').length;
-  const categoryCoveragePct = totalCatalogSkus > 0 ? Math.round((productsWithCategory / totalCatalogSkus) * 100) : 0;
+  // ------------------------------------------------------------
+  // PAGINATED DATA
+  // ------------------------------------------------------------
 
-  // Category Modal Handlers
+  const paginatedCategories = useMemo(() => {
+    const startIndex = (catPage - 1) * PAGE_SIZE;
+
+    return filteredCategories.slice(
+      startIndex,
+      startIndex + PAGE_SIZE
+    );
+  }, [filteredCategories, catPage]);
+
+  const paginatedBrands = useMemo(() => {
+    const startIndex = (brandPage - 1) * PAGE_SIZE;
+
+    return filteredBrands.slice(
+      startIndex,
+      startIndex + PAGE_SIZE
+    );
+  }, [filteredBrands, brandPage]);
+
+  // ------------------------------------------------------------
+  // KEEP CURRENT PAGE VALID
+  // ------------------------------------------------------------
+
+  useEffect(() => {
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filteredCategories.length / PAGE_SIZE)
+    );
+
+    if (catPage > totalPages) {
+      setCatPage(totalPages);
+    }
+  }, [filteredCategories.length, catPage]);
+
+  useEffect(() => {
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filteredBrands.length / PAGE_SIZE)
+    );
+
+    if (brandPage > totalPages) {
+      setBrandPage(totalPages);
+    }
+  }, [filteredBrands.length, brandPage]);
+
+  // ------------------------------------------------------------
+  // METRICS
+  // ------------------------------------------------------------
+
+  const totalCatalogSkus = products.length;
+
+  const productsWithCategory = products.filter(
+    (product) =>
+      typeof product.category === 'string' &&
+      product.category.trim() !== ''
+  ).length;
+
+  const categoryCoveragePct =
+    totalCatalogSkus > 0
+      ? Math.round(
+        (productsWithCategory / totalCatalogSkus) * 100
+      )
+      : 0;
+
+  // ------------------------------------------------------------
+  // CATEGORY MODAL
+  // ------------------------------------------------------------
+
   const handleOpenAddCategory = () => {
     setEditingCategory(null);
-    setCategoryForm({ name: '', description: '' });
+    setCategoryForm({
+      name: '',
+      description: '',
+    });
     setFormError('');
     setIsCategoryModalOpen(true);
   };
 
-  const handleOpenEditCategory = (cat: CategoryItem) => {
-    setEditingCategory(cat);
-    setCategoryForm({ name: cat.name, description: cat.description || '' });
+  const handleOpenEditCategory = (category: CategoryItem) => {
+    setEditingCategory(category);
+
+    setCategoryForm({
+      name: category.name || '',
+      description: category.description || '',
+    });
+
     setFormError('');
     setIsCategoryModalOpen(true);
   };
 
-  const handleSaveCategory = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveCategory = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
     setFormError('');
-    if (!categoryForm.name.trim()) {
+
+    const name = categoryForm.name.trim();
+    const description = categoryForm.description.trim();
+
+    if (!name) {
       setFormError('Category Name is required.');
       return;
     }
 
     setFormSubmitting(true);
+
     try {
       if (editingCategory) {
         await categoryBrandApi.updateCategory(editingCategory.id, {
-          name: categoryForm.name.trim(),
-          description: categoryForm.description.trim() || undefined,
+          name,
+          description: description || undefined,
         });
       } else {
         await categoryBrandApi.createCategory({
-          name: categoryForm.name.trim(),
-          description: categoryForm.description.trim() || undefined,
+          name,
+          description: description || undefined,
         });
       }
+
       setIsCategoryModalOpen(false);
-      fetchAllData();
+      setEditingCategory(null);
+
+      await fetchAllData();
     } catch (err: any) {
-      setFormError(err?.response?.data?.message || err?.message || 'Failed to save category');
+      setFormError(
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to save category.'
+      );
     } finally {
       setFormSubmitting(false);
     }
   };
 
-  // Brand Modal Handlers
+  // ------------------------------------------------------------
+  // BRAND MODAL
+  // ------------------------------------------------------------
+
   const handleOpenAddBrand = () => {
     setEditingBrand(null);
-    setBrandForm({ name: '', country: '', status: 'ACTIVE', description: '' });
+
+    setBrandForm({
+      name: '',
+      country: '',
+      status: 'ACTIVE',
+      description: '',
+    });
+
     setFormError('');
     setIsBrandModalOpen(true);
   };
 
   const handleOpenEditBrand = (brand: BrandItem) => {
     setEditingBrand(brand);
+
     setBrandForm({
-      name: brand.name,
+      name: brand.name || '',
       country: brand.country || '',
       status: brand.status || 'ACTIVE',
       description: brand.description || '',
     });
+
     setFormError('');
     setIsBrandModalOpen(true);
   };
 
-  const handleSaveBrand = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveBrand = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
     setFormError('');
-    if (!brandForm.name.trim()) {
+
+    const name = brandForm.name.trim();
+    const country = brandForm.country.trim();
+    const description = brandForm.description.trim();
+
+    if (!name) {
       setFormError('Brand Name is required.');
       return;
     }
 
     setFormSubmitting(true);
+
     try {
+      const payload = {
+        name,
+        country: country || undefined,
+        status: brandForm.status,
+        description: description || undefined,
+      };
+
       if (editingBrand) {
-        await categoryBrandApi.updateBrand(editingBrand.id, {
-          name: brandForm.name.trim(),
-          country: brandForm.country.trim() || undefined,
-          status: brandForm.status,
-          description: brandForm.description.trim() || undefined,
-        });
+        await categoryBrandApi.updateBrand(
+          editingBrand.id,
+          payload
+        );
       } else {
-        await categoryBrandApi.createBrand({
-          name: brandForm.name.trim(),
-          country: brandForm.country.trim() || undefined,
-          status: brandForm.status,
-          description: brandForm.description.trim() || undefined,
-        });
+        await categoryBrandApi.createBrand(payload);
       }
+
       setIsBrandModalOpen(false);
-      fetchAllData();
+      setEditingBrand(null);
+
+      await fetchAllData();
     } catch (err: any) {
-      setFormError(err?.response?.data?.message || err?.message || 'Failed to save brand');
+      setFormError(
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to save brand.'
+      );
     } finally {
       setFormSubmitting(false);
     }
   };
 
+  // ------------------------------------------------------------
+  // SEARCH HANDLERS
+  // ------------------------------------------------------------
+
+  const handleCategorySearchChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setCategorySearch(event.target.value);
+    setCatPage(1);
+  };
+
+  const handleBrandSearchChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setBrandSearch(event.target.value);
+    setBrandPage(1);
+  };
+
+  // ------------------------------------------------------------
+  // RENDER
+  // ------------------------------------------------------------
+
   return (
     <div className="space-y-6 text-left">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* ======================================================
+          HEADER
+      ======================================================= */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2.5">
-            <FolderTree className="w-7 h-7 text-[#666666]" />
+          <h1 className="flex items-center gap-2.5 text-2xl font-bold text-[#000000]">
+            <FolderTree className="h-7 w-7 text-[#000000]" />
             Categories & Brands
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Organize product classification hierarchies, brand definitions, and metadata tags.
+
+          <p className="mt-1 text-sm text-[#525252]">
+            Organize product classification hierarchies, brand
+            definitions, and metadata tags.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={fetchAllData}
-            className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-white hover:bg-gray-100 transition-colors"
+            disabled={loading}
+            className="rounded-xl border border-gray-200 bg-white p-2.5 text-gray-600 transition-colors hover:bg-[#F5F5F5] hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-60"
             title="Refresh Data"
+            aria-label="Refresh Data"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 ${loading ? 'animate-spin' : ''
+                }`}
+            />
           </button>
-          
+
           {activeTab === 'CATEGORIES' ? (
             <button
+              type="button"
               onClick={handleOpenAddCategory}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#111111] hover:bg-[#2A2A2A] text-white font-semibold text-sm transition-all"
+              className="flex items-center gap-2 rounded-xl bg-[#111111] px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#2A2A2A]"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="h-4 w-4" />
               Add Category
             </button>
           ) : (
             <button
+              type="button"
               onClick={handleOpenAddBrand}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#111111] hover:bg-[#2A2A2A] text-white font-semibold text-sm transition-all"
+              className="flex items-center gap-2 rounded-xl bg-[#111111] px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#2A2A2A]"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="h-4 w-4" />
               Add Brand
             </button>
           )}
         </div>
       </div>
 
-      {/* KPI Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white/60 border border-gray-200 rounded-2xl p-5 flex items-center justify-between backdrop-blur-sm">
+      {/* ======================================================
+          KPI CARDS
+      ======================================================= */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {/* Categories */}
+        <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white/60 p-5 backdrop-blur-sm">
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Product Categories</p>
-            <h3 className="text-2xl font-bold text-gray-500 mt-1">{categories.length}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              Product Categories
+            </p>
+
+            <h3 className="mt-1 text-2xl font-bold text-gray-900">
+              {categories.length}
+            </h3>
           </div>
-          <div className="p-3.5 rounded-xl bg-[#111111]/10 text-[#666666] border border-[#D4D4D4]/20">
-            <FolderTree className="w-6 h-6" />
+
+          <div className="rounded-xl border border-gray-200 bg-[#F5F5F5] p-3.5 text-[#404040]">
+            <FolderTree className="h-6 w-6" />
           </div>
         </div>
 
-        <div className="bg-white/60 border border-gray-200 rounded-2xl p-5 flex items-center justify-between backdrop-blur-sm">
+        {/* Catalog SKUs */}
+        <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white/60 p-5 backdrop-blur-sm">
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Catalog SKUs</p>
-            <h3 className="text-2xl font-bold text-gray-500 mt-1">{totalCatalogSkus}</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              Catalog SKUs
+            </p>
+
+            <h3 className="mt-1 text-2xl font-bold text-gray-900">
+              {totalCatalogSkus}
+            </h3>
           </div>
-          <div className="p-3.5 rounded-xl bg-[#F5F5F5] text-[#666666] border border-gray-400/20">
-            <Layers className="w-6 h-6" />
+
+          <div className="rounded-xl border border-gray-200 bg-[#F5F5F5] p-3.5 text-[#404040]">
+            <Layers className="h-6 w-6" />
           </div>
         </div>
 
-        <div className="bg-white/60 border border-gray-200 rounded-2xl p-5 flex items-center justify-between backdrop-blur-sm">
+        {/* Category Coverage */}
+        <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white/60 p-5 backdrop-blur-sm">
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Category Coverage</p>
-            <h3 className="text-2xl font-bold text-gray-500 mt-1">{categoryCoveragePct}%</h3>
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              Category Coverage
+            </p>
+
+            <h3 className="mt-1 text-2xl font-bold text-gray-900">
+              {categoryCoveragePct}%
+            </h3>
           </div>
-          <div className="p-3.5 rounded-xl bg-gray-900/10 text-gray-900 border border-gray-900/20">
-            <Award className="w-6 h-6" />
+
+          <div className="rounded-xl border border-gray-200 bg-[#F5F5F5] p-3.5 text-[#404040]">
+            <Award className="h-6 w-6" />
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white/80 border border-gray-200 w-fit">
+      {/* ======================================================
+          TABS
+      ======================================================= */}
+      <div className="flex w-fit items-center gap-2 rounded-2xl border border-gray-200 bg-white/80 p-1.5">
         <button
+          type="button"
           onClick={() => setActiveTab('CATEGORIES')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-            activeTab === 'CATEGORIES'
-              ? 'bg-[#111111] text-white '
-              : 'text-gray-500 hover:text-gray-800'
-          }`}
+          className={`rounded-xl px-4 py-2 text-xs font-semibold transition-all ${activeTab === 'CATEGORIES'
+            ? 'bg-[#111111] text-white'
+            : 'text-gray-500 hover:bg-[#F5F5F5] hover:text-gray-900'
+            }`}
         >
           Product Categories ({categories.length})
         </button>
+
         <button
+          type="button"
           onClick={() => setActiveTab('BRANDS')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-            activeTab === 'BRANDS'
-              ? 'bg-[#111111] text-white '
-              : 'text-gray-500 hover:text-gray-800'
-          }`}
+          className={`rounded-xl px-4 py-2 text-xs font-semibold transition-all ${activeTab === 'BRANDS'
+            ? 'bg-[#111111] text-white'
+            : 'text-gray-500 hover:bg-[#F5F5F5] hover:text-gray-900'
+            }`}
         >
           Brand Partners ({brands.length})
         </button>
       </div>
 
-      {/* TAB 1: PRODUCT CATEGORIES */}
+      {/* ======================================================
+          CATEGORIES TAB
+      ======================================================= */}
       {activeTab === 'CATEGORIES' && (
         <div className="space-y-4">
-          {/* Search Toolbar */}
-          <div className="p-4 rounded-2xl bg-white/60 border border-gray-200">
+          {/* Search */}
+          <div className="rounded-2xl border border-gray-200 bg-white/60 p-4">
             <div className="relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+
               <input
                 type="text"
                 placeholder="Search categories..."
                 value={categorySearch}
-                onChange={(e) => { setCategorySearch(e.target.value); setCatPage(1); }}
-                className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                onChange={handleCategorySearchChange}
+                className="w-full rounded-xl border border-gray-200 bg-[#F7F8FA] py-2 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
               />
             </div>
           </div>
 
-          {/* Cards Grid */}
+          {/* Content */}
           {loading ? (
-            <div className="p-12 text-center text-gray-500 bg-white/60 rounded-2xl border border-gray-200">
-              <RefreshCw className="w-6 h-6 animate-spin mx-auto text-[#666666] mb-2" />
+            <div className="rounded-2xl border border-gray-200 bg-white/60 p-12 text-center text-gray-500">
+              <RefreshCw className="mx-auto mb-2 h-6 w-6 animate-spin text-[#666666]" />
               Loading product categories...
             </div>
           ) : filteredCategories.length === 0 ? (
-            <div className="p-12 text-center text-gray-400 bg-white/60 rounded-2xl border border-gray-200">
-              <FolderTree className="w-10 h-10 mx-auto text-slate-600 mb-3" />
-              <p className="font-semibold text-gray-500">No categories found</p>
+            <div className="rounded-2xl border border-gray-200 bg-white/60 p-12 text-center">
+              <FolderTree className="mx-auto mb-3 h-10 w-10 text-gray-400" />
+
+              <p className="font-semibold text-gray-600">
+                No categories found
+              </p>
+
               {categorySearch.trim() ? (
-                <p className="text-xs text-gray-400 mt-1">Try clearing your search filters.</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Try clearing your search filters.
+                </p>
               ) : (
                 <div className="mt-3">
-                  <p className="text-xs text-gray-400 mb-3">Create your first product category to organize your catalog.</p>
+                  <p className="mb-3 text-xs text-gray-400">
+                    Create your first product category to
+                    organize your catalog.
+                  </p>
+
                   <button
+                    type="button"
                     onClick={handleOpenAddCategory}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#111111] text-white text-xs font-semibold hover:bg-[#111111] transition-colors"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#111111] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#2A2A2A]"
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="h-4 w-4" />
                     Add Category
                   </button>
                 </div>
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredCategories.slice((catPage - 1) * 5, catPage * 5).map((cat) => (
-                <div
-                  key={cat.id}
-                  className="p-5 rounded-2xl bg-white/60 border border-gray-200 hover:border-[#D4D4D4]/40 transition-all flex flex-col justify-between space-y-4"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-bold text-white text-base flex items-center gap-2">
-                        <FolderTree className="w-4 h-4 text-[#666666] shrink-0" />
-                        {cat.name}
-                      </h3>
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F5F5F5] text-[#111111] border border-[#D4D4D4]/20 whitespace-nowrap">
-                        {cat.productCount} SKUs
-                      </span>
+            <>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {paginatedCategories.map((category) => (
+                  <div
+                    key={category.id}
+                    className="flex flex-col justify-between space-y-4 rounded-2xl border border-[#E5E5E5] bg-[#FFFFFF] p-5 shadow-xs transition-all hover:border-[#D4D4D4]"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            onSelectCategory?.(category.name)
+                          }
+                          className="flex min-w-0 items-center gap-2 text-left cursor-pointer"
+                        >
+                          <FolderTree className="h-4 w-4 shrink-0 text-[#404040]" />
+
+                          <h3 className="truncate text-base font-bold text-[#000000]">
+                            {category.name}
+                          </h3>
+                        </button>
+
+                        <span className="whitespace-nowrap rounded-full border border-[#E5E5E5] bg-[#F5F5F5] px-2.5 py-0.5 text-xs font-bold text-[#000000]">
+                          {category.productCount ?? 0} SKUs
+                        </span>
+                      </div>
+
+                      <p className="mt-3 line-clamp-3 min-h-[3rem] text-xs leading-relaxed text-[#525252]">
+                        {category.description ||
+                          'No description provided for this category.'}
+                      </p>
                     </div>
 
-                    <p className="text-xs text-gray-500 mt-3 leading-relaxed line-clamp-3 min-h-[3rem]">
-                      {cat.description || 'No description provided for this category.'}
-                    </p>
+                    <div className="flex items-center justify-end border-t border-[#E5E5E5] pt-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleOpenEditCategory(category)
+                        }
+                        className="flex items-center gap-1.5 rounded-lg border border-[#D4D4D4] bg-[#FFFFFF] px-3 py-1.5 text-xs font-semibold text-[#262626] transition-colors hover:bg-[#F5F5F5] hover:text-[#000000] cursor-pointer"
+                      >
+                        <Edit2 className="h-3.5 w-3.5 text-[#000000]" />
+                        Edit
+                      </button>
+                    </div>
                   </div>
+                ))}
+              </div>
 
-                  <div className="pt-3 border-t border-gray-200 flex items-center justify-end">
-                    <button
-                      onClick={() => handleOpenEditCategory(cat)}
-                      className="px-3 py-1.5 rounded-lg bg-[#F7F8FA] hover:bg-gray-100 border border-gray-200 text-gray-600 hover:text-white text-xs font-semibold transition-colors flex items-center gap-1.5"
-                    >
-                      <Edit2 className="w-3.5 h-3.5 text-[#666666]" />
-                      Edit
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+              <Pagination
+                totalItems={filteredCategories.length}
+                currentPage={catPage}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCatPage}
+              />
+            </>
           )}
-          <Pagination totalItems={filteredCategories.length} currentPage={catPage} pageSize={5} onPageChange={setCatPage} />
         </div>
       )}
 
-      {/* TAB 2: BRAND PARTNERS */}
+      {/* ======================================================
+          BRANDS TAB
+      ======================================================= */}
       {activeTab === 'BRANDS' && (
         <div className="space-y-4">
-          {/* Search Toolbar */}
-          <div className="p-4 rounded-2xl bg-white/60 border border-gray-200">
+          {/* Search */}
+          <div className="rounded-2xl border border-gray-200 bg-white/60 p-4">
             <div className="relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+
               <input
                 type="text"
                 placeholder="Search brands..."
                 value={brandSearch}
-                onChange={(e) => { setBrandSearch(e.target.value); setBrandPage(1); }}
-                className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                onChange={handleBrandSearchChange}
+                className="w-full rounded-xl border border-gray-200 bg-[#F7F8FA] py-2 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
               />
             </div>
           </div>
 
-          {/* Cards Grid */}
+          {/* Content */}
           {loading ? (
-            <div className="p-12 text-center text-gray-500 bg-white/60 rounded-2xl border border-gray-200">
-              <RefreshCw className="w-6 h-6 animate-spin mx-auto text-[#666666] mb-2" />
+            <div className="rounded-2xl border border-gray-200 bg-white/60 p-12 text-center text-gray-500">
+              <RefreshCw className="mx-auto mb-2 h-6 w-6 animate-spin text-[#666666]" />
               Loading brand partners...
             </div>
           ) : filteredBrands.length === 0 ? (
-            <div className="p-12 text-center text-gray-400 bg-white/60 rounded-2xl border border-gray-200">
-              <Building2 className="w-10 h-10 mx-auto text-slate-600 mb-3" />
-              <p className="font-semibold text-gray-500">No brands found</p>
+            <div className="rounded-2xl border border-gray-200 bg-white/60 p-12 text-center">
+              <Building2 className="mx-auto mb-3 h-10 w-10 text-gray-400" />
+
+              <p className="font-semibold text-gray-600">
+                No brands found
+              </p>
+
               {brandSearch.trim() ? (
-                <p className="text-xs text-gray-400 mt-1">Try clearing your search filters.</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Try clearing your search filters.
+                </p>
               ) : (
                 <div className="mt-3">
-                  <p className="text-xs text-gray-400 mb-3">Create your first brand partner to associate with products.</p>
+                  <p className="mb-3 text-xs text-gray-400">
+                    Create your first brand partner to associate
+                    with products.
+                  </p>
+
                   <button
+                    type="button"
                     onClick={handleOpenAddBrand}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#111111] text-white text-xs font-semibold hover:bg-[#111111] transition-colors"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#111111] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#2A2A2A]"
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="h-4 w-4" />
                     Add Brand
                   </button>
                 </div>
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredBrands.map((brand) => (
-                <div
-                  key={brand.id}
-                  className="p-5 rounded-2xl bg-white/60 border border-gray-200 hover:border-[#D4D4D4]/40 transition-all flex flex-col justify-between space-y-4"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-2 mb-3">
-                      <h3 className="font-bold text-white text-base flex items-center gap-2">
-                        <Building2 className="w-4 h-4 text-[#666666] shrink-0" />
-                        {brand.name}
-                      </h3>
-                      <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                          brand.status === 'ACTIVE'
-                            ? 'bg-gray-900/10 text-gray-900 border border-gray-900/20'
-                            : 'bg-gray-900/10 text-gray-900 border border-gray-900/20'
-                        }`}
+            <>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {paginatedBrands.map((brand) => (
+                  <div
+                    key={brand.id}
+                    className="flex flex-col justify-between space-y-4 rounded-2xl border border-gray-200 bg-white/60 p-5 transition-all hover:border-gray-300"
+                  >
+                    <div>
+                      <div className="mb-3 flex items-start justify-between gap-2">
+                        <div className="flex min-w-0 items-center gap-2">
+                          <Building2 className="h-4 w-4 shrink-0 text-[#666666]" />
+
+                          <h3 className="truncate text-base font-bold text-gray-900">
+                            {brand.name}
+                          </h3>
+                        </div>
+
+                        <span className="whitespace-nowrap rounded-full border border-gray-200 bg-[#F5F5F5] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-900">
+                          {brand.status}
+                        </span>
+                      </div>
+
+                      <div className="mt-2 space-y-1.5 text-xs text-gray-600">
+                        <div className="flex items-center gap-2">
+                          <Globe className="h-3.5 w-3.5 shrink-0 text-gray-500" />
+
+                          <span>
+                            Country:{' '}
+                            <strong className="text-gray-900">
+                              {brand.country || 'N/A'}
+                            </strong>
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Package className="h-3.5 w-3.5 shrink-0 text-gray-500" />
+
+                          <span>
+                            Catalog Products:{' '}
+                            <strong className="font-bold text-gray-900">
+                              {brand.productCount ?? 0}
+                            </strong>
+                          </span>
+                        </div>
+                      </div>
+
+                      {brand.description && (
+                        <p className="mt-3 line-clamp-3 text-xs leading-relaxed text-gray-500">
+                          {brand.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-end border-t border-gray-200 pt-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleOpenEditBrand(brand)
+                        }
+                        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-[#F7F8FA] px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                       >
-                        {brand.status}
-                      </span>
-                    </div>
-
-                    <div className="space-y-1.5 text-xs text-gray-600 mt-2">
-                      <div className="flex items-center gap-2">
-                        <Globe className="w-3.5 h-3.5 text-gray-500 shrink-0" />
-                        <span>Country: <strong className="text-gray-900">{brand.country || 'N/A'}</strong></span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Package className="w-3.5 h-3.5 text-gray-500 shrink-0" />
-                        <span>Catalog Products: <strong className="text-[#666666] font-bold">{brand.productCount}</strong></span>
-                      </div>
+                        <Edit2 className="h-3.5 w-3.5 text-[#666666]" />
+                        Edit
+                      </button>
                     </div>
                   </div>
+                ))}
+              </div>
 
-                  <div className="pt-3 border-t border-gray-200 flex items-center justify-end">
-                    <button
-                      onClick={() => handleOpenEditBrand(brand)}
-                      className="px-3 py-1.5 rounded-lg bg-[#F7F8FA] hover:bg-gray-100 border border-gray-200 text-gray-600 hover:text-white text-xs font-semibold transition-colors flex items-center gap-1.5"
-                    >
-                      <Edit2 className="w-3.5 h-3.5 text-[#666666]" />
-                      Edit
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+              <Pagination
+                totalItems={filteredBrands.length}
+                currentPage={brandPage}
+                pageSize={PAGE_SIZE}
+                onPageChange={setBrandPage}
+              />
+            </>
           )}
-          <Pagination totalItems={filteredBrands.length} currentPage={brandPage} pageSize={5} onPageChange={setBrandPage} />
         </div>
       )}
 
-      {/* MODAL 1: ADD / EDIT CATEGORY */}
+      {/* ======================================================
+          CATEGORY MODAL
+      ======================================================= */}
       {isCategoryModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#F7F8FA]/80 backdrop-blur-sm overflow-y-auto">
-          <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden my-8">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-[#F7F8FA]/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm">
+          <div className="my-8 w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-gray-200 bg-[#F7F8FA] p-6">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-[#111111]/10 text-[#666666] border border-[#D4D4D4]/20">
-                  <FolderTree className="w-5 h-5" />
+                <div className="rounded-xl border border-gray-200 bg-white p-2.5 text-[#404040]">
+                  <FolderTree className="h-5 w-5" />
                 </div>
+
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">
-                    {editingCategory ? 'Edit Category' : 'Add New Category'}
+                    {editingCategory
+                      ? 'Edit Category'
+                      : 'Add New Category'}
                   </h3>
-                  <p className="text-xs text-gray-500">Specify category classification details.</p>
+
+                  <p className="text-xs text-gray-500">
+                    Specify category classification details.
+                  </p>
                 </div>
               </div>
+
               <button
+                type="button"
                 onClick={() => setIsCategoryModalOpen(false)}
-                className="p-2 text-gray-500 hover:text-white hover:bg-gray-100 rounded-xl transition-colors"
+                className="rounded-xl p-2 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-900"
+                aria-label="Close category modal"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveCategory} className="p-6 space-y-4">
+            {/* Form */}
+            <form
+              onSubmit={handleSaveCategory}
+              className="space-y-4 p-6"
+            >
               {formError && (
-                <div className="p-3.5 rounded-xl bg-gray-100 border border-gray-800 text-gray-900 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  {formError}
+                <div className="flex items-center gap-2 rounded-xl border border-gray-300 bg-gray-100 p-3.5 text-xs text-gray-900">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{formError}</span>
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-600">
                   Category Name *
                 </label>
+
                 <input
                   type="text"
                   required
                   value={categoryForm.name}
-                  onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                  onChange={(event) =>
+                    setCategoryForm({
+                      ...categoryForm,
+                      name: event.target.value,
+                    })
+                  }
                   placeholder="e.g. Electronics"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  className="w-full rounded-xl border border-gray-200 bg-[#F7F8FA] px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-600">
                   Description
                 </label>
+
                 <textarea
                   rows={3}
                   value={categoryForm.description}
-                  onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
+                  onChange={(event) =>
+                    setCategoryForm({
+                      ...categoryForm,
+                      description: event.target.value,
+                    })
+                  }
                   placeholder="e.g. Computing, displays & consumer electronics"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  className="w-full resize-none rounded-xl border border-gray-200 bg-[#F7F8FA] px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
                 <button
                   type="button"
-                  onClick={() => setIsCategoryModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-500 hover:text-white text-xs font-semibold transition-colors"
+                  onClick={() =>
+                    setIsCategoryModalOpen(false)
+                  }
+                  className="rounded-xl border border-gray-200 bg-[#F7F8FA] px-4 py-2.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                 >
                   Cancel
                 </button>
+
                 <button
                   type="submit"
                   disabled={formSubmitting}
-                  className="px-5 py-2.5 rounded-xl bg-[#111111] hover:bg-[#2A2A2A] text-white text-xs font-semibold transition-all flex items-center gap-2"
+                  className="flex items-center gap-2 rounded-xl bg-[#111111] px-5 py-2.5 text-xs font-semibold text-white transition-all hover:bg-[#2A2A2A] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {formSubmitting && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
-                  {editingCategory ? 'Save Changes' : 'Create Category'}
+                  {formSubmitting && (
+                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                  )}
+
+                  {editingCategory
+                    ? 'Save Changes'
+                    : 'Create Category'}
                 </button>
               </div>
             </form>
@@ -556,74 +893,110 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = () => {
         </div>
       )}
 
-      {/* MODAL 2: ADD / EDIT BRAND */}
+      {/* ======================================================
+          BRAND MODAL
+      ======================================================= */}
       {isBrandModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#F7F8FA]/80 backdrop-blur-sm overflow-y-auto">
-          <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden my-8">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-[#F7F8FA]/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm">
+          <div className="my-8 w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-gray-200 bg-[#F7F8FA] p-6">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-[#111111]/10 text-[#666666] border border-[#D4D4D4]/20">
-                  <Building2 className="w-5 h-5" />
+                <div className="rounded-xl border border-gray-200 bg-white p-2.5 text-[#404040]">
+                  <Building2 className="h-5 w-5" />
                 </div>
+
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">
-                    {editingBrand ? 'Edit Brand' : 'Add New Brand'}
+                    {editingBrand
+                      ? 'Edit Brand'
+                      : 'Add New Brand'}
                   </h3>
-                  <p className="text-xs text-gray-500">Specify brand partner metadata.</p>
+
+                  <p className="text-xs text-gray-500">
+                    Specify brand partner metadata.
+                  </p>
                 </div>
               </div>
+
               <button
+                type="button"
                 onClick={() => setIsBrandModalOpen(false)}
-                className="p-2 text-gray-500 hover:text-white hover:bg-gray-100 rounded-xl transition-colors"
+                className="rounded-xl p-2 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-900"
+                aria-label="Close brand modal"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveBrand} className="p-6 space-y-4">
+            {/* Form */}
+            <form
+              onSubmit={handleSaveBrand}
+              className="space-y-4 p-6"
+            >
               {formError && (
-                <div className="p-3.5 rounded-xl bg-gray-100 border border-gray-800 text-gray-900 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  {formError}
+                <div className="flex items-center gap-2 rounded-xl border border-gray-300 bg-gray-100 p-3.5 text-xs text-gray-900">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{formError}</span>
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-600">
                   Brand Name *
                 </label>
+
                 <input
                   type="text"
                   required
                   value={brandForm.name}
-                  onChange={(e) => setBrandForm({ ...brandForm, name: e.target.value })}
+                  onChange={(event) =>
+                    setBrandForm({
+                      ...brandForm,
+                      name: event.target.value,
+                    })
+                  }
                   placeholder="e.g. Apple"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  className="w-full rounded-xl border border-gray-200 bg-[#F7F8FA] px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
+                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Country
                   </label>
+
                   <input
                     type="text"
                     value={brandForm.country}
-                    onChange={(e) => setBrandForm({ ...brandForm, country: e.target.value })}
+                    onChange={(event) =>
+                      setBrandForm({
+                        ...brandForm,
+                        country: event.target.value,
+                      })
+                    }
                     placeholder="e.g. United States"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                    className="w-full rounded-xl border border-gray-200 bg-[#F7F8FA] px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
+                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Status
                   </label>
+
                   <select
                     value={brandForm.status}
-                    onChange={(e) => setBrandForm({ ...brandForm, status: e.target.value as any })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                    onChange={(event) =>
+                      setBrandForm({
+                        ...brandForm,
+                        status: event.target.value as
+                          | 'ACTIVE'
+                          | 'INACTIVE',
+                      })
+                    }
+                    className="w-full rounded-xl border border-gray-200 bg-[#F7F8FA] px-3.5 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                   >
                     <option value="ACTIVE">ACTIVE</option>
                     <option value="INACTIVE">INACTIVE</option>
@@ -632,33 +1005,45 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-600">
                   Description
                 </label>
+
                 <textarea
-                  rows={2}
+                  rows={3}
                   value={brandForm.description}
-                  onChange={(e) => setBrandForm({ ...brandForm, description: e.target.value })}
+                  onChange={(event) =>
+                    setBrandForm({
+                      ...brandForm,
+                      description: event.target.value,
+                    })
+                  }
                   placeholder="e.g. Consumer electronics & computing brand"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  className="w-full resize-none rounded-xl border border-gray-200 bg-[#F7F8FA] px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+              <div className="flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
                 <button
                   type="button"
                   onClick={() => setIsBrandModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-[#F7F8FA] border border-gray-200 text-gray-500 hover:text-white text-xs font-semibold transition-colors"
+                  className="rounded-xl border border-gray-200 bg-[#F7F8FA] px-4 py-2.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
                 >
                   Cancel
                 </button>
+
                 <button
                   type="submit"
                   disabled={formSubmitting}
-                  className="px-5 py-2.5 rounded-xl bg-[#111111] hover:bg-[#2A2A2A] text-white text-xs font-semibold transition-all flex items-center gap-2"
+                  className="flex items-center gap-2 rounded-xl bg-[#111111] px-5 py-2.5 text-xs font-semibold text-white transition-all hover:bg-[#2A2A2A] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {formSubmitting && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
-                  {editingBrand ? 'Save Changes' : 'Create Brand'}
+                  {formSubmitting && (
+                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                  )}
+
+                  {editingBrand
+                    ? 'Save Changes'
+                    : 'Create Brand'}
                 </button>
               </div>
             </form>

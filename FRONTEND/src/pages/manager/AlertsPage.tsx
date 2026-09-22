@@ -80,7 +80,7 @@ export const AlertsPage: React.FC = () => {
 
         <button
           onClick={fetchAlerts}
-          className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-white hover:bg-gray-100 transition-colors w-fit"
+          className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors w-fit"
           title="Refresh Alerts"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -151,7 +151,7 @@ export const AlertsPage: React.FC = () => {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-white text-base">{w.name} ({w.code})</span>
+                        <span className="font-bold text-gray-900 text-base">{w.name} ({w.code})</span>
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#111111]/20 text-[#111111]">
                           HIGH OCCUPANCY
                         </span>
@@ -198,7 +198,7 @@ export const AlertsPage: React.FC = () => {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-white text-base">
+                        <span className="font-bold text-gray-900 text-base">
                           {prod?.name || `Product #${item.productId}`}
                         </span>
                         <span

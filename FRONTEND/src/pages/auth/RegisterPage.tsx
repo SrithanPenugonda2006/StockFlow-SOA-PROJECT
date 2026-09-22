@@ -260,7 +260,7 @@ export const RegisterPage: React.FC = () => {
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value)}
                   placeholder="000000"
-                  className="w-full bg-white border border-gray-200 rounded-lg text-center text-lg tracking-widest font-mono font-bold text-white p-2 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  className="w-full bg-white border border-gray-200 rounded-lg text-center text-lg tracking-widest font-mono font-bold text-gray-900 p-2 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                 />
                 <Button
                   type="button"
