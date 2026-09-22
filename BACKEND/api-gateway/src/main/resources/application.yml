@@ -1,6 +1,6 @@
 server:
   port: 8080
-
+#OkOK
 spring:
   application:
     name: api-gateway
