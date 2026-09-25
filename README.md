@@ -97,7 +97,7 @@ Traditional centralized inventory systems suffer from latency, single points of 
 - **Spring Cloud**: Spring Cloud Gateway, Netflix Eureka Server
 - **Security**: Spring Security 6, JWT (JSON Web Tokens)
 - **Data Access**: Spring Data JPA / Hibernate
-- **Database**: H2 (In-Memory for Dev), PostgreSQL (Production/Docker)
+- **Database**: PostgreSQL
 - **Email**: Spring Mail / SMTP integration
 - **Build Tool**: Apache Maven (Multi-module parent POM)
 - **Containerization**: Docker & Docker Compose

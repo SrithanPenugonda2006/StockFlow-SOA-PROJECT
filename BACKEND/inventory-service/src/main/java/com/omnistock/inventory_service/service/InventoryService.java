@@ -506,6 +506,12 @@ public class InventoryService {
                 .collect(Collectors.toList());
     }
 
+    public List<InventoryDTO> getAllInventory() {
+        return inventoryRepository.findAll().stream()
+                .map(this::mapInventoryToDto)
+                .collect(Collectors.toList());
+    }
+
     // ─── Smart Inventory Analytics ────────────────────────────────────────────
 
     public List<SmartInventoryDTO> getSmartInventoryAnalytics() {
@@ -599,8 +605,14 @@ public class InventoryService {
         dto.setCity(w.getCity());
         dto.setState(w.getState());
         dto.setCountry(w.getCountry());
-        dto.setTotalCapacity(w.getTotalCapacity());
-        dto.setOccupiedCapacity(w.getOccupiedCapacity());
+        
+        Integer totalCap = w.getTotalCapacity() != null ? w.getTotalCapacity() : 10000;
+        dto.setTotalCapacity(totalCap);
+
+        Integer occupiedCap = inventoryRepository.sumQuantityByWarehouseId(w.getId());
+        if (occupiedCap == null) occupiedCap = 0;
+        dto.setOccupiedCapacity(occupiedCap);
+
         dto.setStatus(w.getStatus());
         return dto;
     }

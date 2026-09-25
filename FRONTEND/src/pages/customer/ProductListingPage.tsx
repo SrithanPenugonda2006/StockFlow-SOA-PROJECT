@@ -72,9 +72,9 @@ export const ProductListingPage: React.FC = () => {
       {/* Hero Banner */}
       <div className="bg-[#111111] border border-[#333333] rounded-2xl p-8 shadow-sm relative overflow-hidden">
         <div className="max-w-2xl relative z-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#666666]">Enterprise Stock Catalog</span>
-          <h1 className="text-3xl font-black text-gray-500 mt-1 tracking-tight">Browse Certified Warehouse Inventory</h1>
-          <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+          <span className="text-xs font-bold uppercase tracking-wider text-white">Enterprise Stock Catalog</span>
+          <h1 className="text-3xl font-black text-white mt-1 tracking-tight">Browse Certified Warehouse Inventory</h1>
+          <p className="text-sm text-white mt-2 leading-relaxed">
             Real-time stock reservation backed by multi-warehouse fulfillment centers and pessimistic lock safety.
           </p>
         </div>

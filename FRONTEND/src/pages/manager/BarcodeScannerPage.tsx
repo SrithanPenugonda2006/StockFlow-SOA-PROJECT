@@ -1,3 +1,4 @@
+import { formatCurrency } from '../../utils/formatters';
 import React, { useState, useEffect } from 'react';
 import {
   Barcode as BarcodeIcon,
@@ -213,7 +214,7 @@ export const BarcodeScannerPage: React.FC = () => {
                 <div>
                   <span className="text-[10px] text-gray-500 uppercase font-semibold block">Selling Price</span>
                   <span className="text-sm font-bold text-gray-900">
-                    ₹{selectedProduct.price ? selectedProduct.price.toLocaleString('en-IN', { minimumFractionDigits: 2 }) : '0.00'}
+                    {formatCurrency(selectedProduct.price || 0)}
                   </span>
                 </div>
               </div>

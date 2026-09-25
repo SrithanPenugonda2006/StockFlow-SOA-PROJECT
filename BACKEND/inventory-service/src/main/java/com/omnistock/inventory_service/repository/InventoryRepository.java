@@ -32,4 +32,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT i FROM Inventory i WHERE i.id = :id")
     Optional<Inventory> findByIdForUpdate(@Param("id") Long id);
+
+    @Query("SELECT COALESCE(SUM(i.quantity), 0) FROM Inventory i WHERE i.warehouseId = :warehouseId")
+    Integer sumQuantityByWarehouseId(@Param("warehouseId") Long warehouseId);
 }

@@ -4,7 +4,7 @@ import { Modal } from "../common/Modal";
 import { Badge } from "../common/Badge";
 import { Button } from "../common/Button";
 import { formatCurrency, formatDate } from "../../utils/formatters";
-import { Calendar, DollarSign, QrCode, Tag, Award } from "lucide-react";
+import { Calendar, IndianRupee, QrCode, Tag, Award } from "lucide-react";
 
 interface ProductDetailModalProps {
   isOpen: boolean;
@@ -58,14 +58,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <div className="p-3.5 rounded-xl bg-[#F7F8FA]/60 border border-gray-200">
             <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block mb-1 flex items-center gap-1.5">
-              <DollarSign className="w-3.5 h-3.5 text-gray-500" /> Unit Cost
+              <IndianRupee className="w-3.5 h-3.5 text-gray-500" /> Unit Cost
             </span>
             <span className="text-base font-bold text-gray-800">{formatCurrency(product.unitCost || 0)}</span>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#F7F8FA]/60 border border-gray-200">
             <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block mb-1 flex items-center gap-1.5">
-              <DollarSign className="w-3.5 h-3.5 text-gray-900" /> Selling Price
+              <IndianRupee className="w-3.5 h-3.5 text-gray-900" /> Selling Price
             </span>
             <span className="text-lg font-black text-gray-900">{formatCurrency(sellingPrice || 0)}</span>
           </div>

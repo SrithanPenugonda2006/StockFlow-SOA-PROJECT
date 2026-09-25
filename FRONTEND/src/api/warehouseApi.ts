@@ -12,6 +12,11 @@ export const warehouseApi = {
     return response.data;
   },
 
+  getWarehouse: async (id: number): Promise<Warehouse> => {
+    const response = await apiClient.get<Warehouse>(`/api/inventory/warehouses/${id}`);
+    return response.data;
+  },
+
   createWarehouse: async (warehouseData: WarehouseCreateDTO): Promise<Warehouse> => {
     const response = await apiClient.post<Warehouse>('/api/inventory/warehouses', warehouseData);
     return response.data;

@@ -47,8 +47,18 @@ public class WarehouseDTO {
     public Integer getTotalCapacity() { return totalCapacity; }
     public void setTotalCapacity(Integer totalCapacity) { this.totalCapacity = totalCapacity; }
 
+    public Integer getCapacity() { return totalCapacity; }
+    public void setCapacity(Integer capacity) {
+        if (capacity != null) {
+            this.totalCapacity = capacity;
+        }
+    }
+
     public Integer getOccupiedCapacity() { return occupiedCapacity; }
     public void setOccupiedCapacity(Integer occupiedCapacity) { this.occupiedCapacity = occupiedCapacity; }
+
+    public Integer getUsedCapacity() { return occupiedCapacity; }
+    public void setUsedCapacity(Integer usedCapacity) { this.occupiedCapacity = usedCapacity; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

@@ -13,19 +13,19 @@ public class BrandDTO {
     private String country;
     private String status = "ACTIVE";
     private String description;
-    private long productCount;
+    private Long productCount = 0L;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public BrandDTO() {}
 
-    public BrandDTO(Long id, String name, String country, String status, String description, long productCount) {
+    public BrandDTO(Long id, String name, String country, String status, String description, Long productCount) {
         this.id = id;
         this.name = name;
         this.country = country;
         this.status = status != null ? status : "ACTIVE";
         this.description = description;
-        this.productCount = productCount;
+        this.productCount = productCount != null ? productCount : 0L;
     }
 
     public Long getId() { return id; }
@@ -43,8 +43,8 @@ public class BrandDTO {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public long getProductCount() { return productCount; }
-    public void setProductCount(long productCount) { this.productCount = productCount; }
+    public Long getProductCount() { return productCount; }
+    public void setProductCount(Long productCount) { this.productCount = productCount != null ? productCount : 0L; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

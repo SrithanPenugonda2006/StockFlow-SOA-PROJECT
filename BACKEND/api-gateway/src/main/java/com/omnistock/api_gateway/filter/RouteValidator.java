@@ -13,6 +13,9 @@ public class RouteValidator {
             "/api/auth/login",
             "/api/auth/send-otp",
             "/api/auth/verify-otp",
+            "/api/auth/forgot-password",
+            "/api/auth/verify-reset-token",
+            "/api/auth/reset-password",
             "/eureka"
     );
 

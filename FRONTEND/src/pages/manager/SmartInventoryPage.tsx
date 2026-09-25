@@ -1,3 +1,4 @@
+import { formatCurrency } from '../../utils/formatters';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -157,7 +158,7 @@ export const SmartInventoryPage: React.FC = () => {
             </div>
           </div>
           <p className="text-2xl font-bold text-gray-900 mt-2">
-            ₹{totalValuation.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(totalValuation)}
           </p>
           <span className="text-[11px] text-gray-400 mt-1 block">Across all active catalog SKUs</span>
         </div>
@@ -242,7 +243,7 @@ export const SmartInventoryPage: React.FC = () => {
                       )}
                     </td>
                     <td className="px-6 py-4 font-semibold text-gray-900">
-                      ₹{item.inventoryValue ? item.inventoryValue.toLocaleString('en-IN', { minimumFractionDigits: 2 }) : '0.00'}
+                      {formatCurrency(item.inventoryValue || 0)}
                     </td>
                     <td className="px-6 py-4">
                       {item.isReorderNeeded ? (

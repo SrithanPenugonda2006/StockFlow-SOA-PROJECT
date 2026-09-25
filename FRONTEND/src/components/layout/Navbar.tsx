@@ -12,7 +12,7 @@ export const Navbar: React.FC = () => {
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Brand */}
-        <Link to="/customer/products" className="flex items-center gap-3 group">
+        <Link to="/products" className="flex items-center gap-3 group">
           <div className="p-2.5 rounded-xl bg-[#111111] text-white group-hover:scale-105 transition-transform">
             <Boxes className="w-6 h-6" />
           </div>
@@ -25,7 +25,7 @@ export const Navbar: React.FC = () => {
         {/* Links */}
         <div className="flex items-center gap-6 text-sm font-medium">
           <NavLink
-            to="/customer/products"
+            to="/products"
             className={({ isActive }) =>
               `flex items-center gap-2 hover:text-[#111111] transition-colors ${
                 isActive ? 'text-[#111111] font-bold' : 'text-gray-600'
@@ -36,7 +36,7 @@ export const Navbar: React.FC = () => {
           </NavLink>
 
           <NavLink
-            to="/customer/orders"
+            to="/my-orders"
             className={({ isActive }) =>
               `flex items-center gap-2 hover:text-[#111111] transition-colors ${
                 isActive ? 'text-[#111111] font-bold' : 'text-gray-600'
@@ -50,13 +50,14 @@ export const Navbar: React.FC = () => {
         {/* Right Actions */}
         <div className="flex items-center gap-4">
           <Link
-            to="/customer/cart"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#111111] border border-[#D4D4D4] text-[#111111] hover:bg-[#111111]/20 transition-all relative"
+            to="/cart"
+            className="flex items-center justify-center gap-2.5 h-[50px] px-6 rounded-2xl bg-[#D4D4D4] hover:bg-[#C4C4C4] active:bg-[#B8B8B8] border border-[#B8B8B8] text-[#000000] transition-all relative select-none shadow-sm"
+            aria-label="View Shopping Cart"
           >
-            <ShoppingCart className="w-4 h-4 text-[#111111]" />
-            <span className="text-sm font-semibold">Cart</span>
+            <ShoppingCart className="w-5 h-5 text-[#000000] shrink-0 stroke-[2.2]" />
+            <span className="text-base font-bold text-[#000000] tracking-tight">Cart</span>
             {totalItems > 0 && (
-              <span className="ml-1 bg-[#111111] text-white text-xs font-bold px-2 py-0.5 rounded-full ">
+              <span className="ml-1.5 inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 bg-[#000000] text-white text-xs font-extrabold rounded-full">
                 {totalItems}
               </span>
             )}
@@ -81,7 +82,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="text-sm font-semibold text-white bg-[#111111] hover:bg-[#111111] px-4 py-2 rounded-xl  transition-all"
+              className="text-sm font-semibold text-white bg-[#111111] hover:bg-[#2A2A2A] px-4 py-2 rounded-xl transition-all"
             >
               Sign In
             </Link>

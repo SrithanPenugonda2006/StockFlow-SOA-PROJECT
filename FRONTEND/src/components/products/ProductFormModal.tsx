@@ -197,10 +197,10 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
           </div>
         </div>
 
-        {/* ROW 4: Unit Cost ($) (33%) | Selling Price ($) (33%) | Initial Stock (33%) */}
+        {/* ROW 4: Unit Cost (₹) (33%) | Selling Price (₹) (33%) | Initial Stock (33%) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
-            label="Unit Cost ($)"
+            label="Unit Cost (₹)"
             type="number"
             step="0.01"
             placeholder="100.00"
@@ -209,7 +209,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
             error={errors.unitCost?.message}
           />
           <Input
-            label="Selling Price ($)"
+            label="Selling Price (₹)"
             type="number"
             step="0.01"
             placeholder="149.99"

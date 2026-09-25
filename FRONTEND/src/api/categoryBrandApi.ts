@@ -35,4 +35,12 @@ export const categoryBrandApi = {
     const response = await apiClient.put<BrandItem>(`/api/products/brands/${id}`, dto);
     return response.data;
   },
+
+  deleteCategory: async (id: number): Promise<void> => {
+    await apiClient.delete(`/api/products/categories/${id}`);
+  },
+
+  deleteBrand: async (id: number): Promise<void> => {
+    await apiClient.delete(`/api/products/brands/${id}`);
+  },
 };

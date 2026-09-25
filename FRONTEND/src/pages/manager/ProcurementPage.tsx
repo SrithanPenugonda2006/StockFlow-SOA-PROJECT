@@ -1,3 +1,4 @@
+import { formatCurrency } from '../../utils/formatters';
 import React, { useState, useEffect } from 'react';
 import {
   ShoppingBag,
@@ -281,7 +282,7 @@ export const ProcurementPage: React.FC = () => {
             </div>
           </div>
           <p className="text-2xl font-bold text-gray-900 mt-2">
-            ₹{totalSpend.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(totalSpend)}
           </p>
         </div>
       </div>
@@ -366,7 +367,7 @@ export const ProcurementPage: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 font-semibold text-gray-900">
-                      ₹{po.totalAmount ? po.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 }) : '0.00'}
+                      {formatCurrency(po.totalAmount || 0)}
                     </td>
                     <td className="px-6 py-4">{renderStatusBadge(po.status)}</td>
                     <td className="px-6 py-4 text-xs text-gray-500">
@@ -539,7 +540,7 @@ export const ProcurementPage: React.FC = () => {
               <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#F5F5F5] border border-[#E5E5E5]">
                 <span className="text-xs font-semibold text-[#111111]">Total Purchase Order Value</span>
                 <span className="text-lg font-bold text-gray-900">
-                  ₹{calculatedTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatCurrency(calculatedTotal)}
                 </span>
               </div>
 

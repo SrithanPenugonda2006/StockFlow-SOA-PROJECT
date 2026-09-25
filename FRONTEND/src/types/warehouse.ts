@@ -9,6 +9,7 @@ export interface Warehouse {
   country?: string;
   totalCapacity?: number;
   occupiedCapacity?: number;
+  usedCapacity?: number;
   capacity?: number;
   status?: string;
   createdAt?: string;
@@ -23,5 +24,7 @@ export interface WarehouseCreateDTO {
   state?: string;
   country?: string;
   totalCapacity?: number;
+  occupiedCapacity?: number;
+  usedCapacity?: number;
   capacity?: number;
 }

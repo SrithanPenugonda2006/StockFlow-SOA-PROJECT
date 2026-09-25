@@ -52,6 +52,11 @@ public class InventoryController {
 
     // ─── Inventory Endpoints ─────────────────────────────────────────────────
 
+    @GetMapping
+    public ResponseEntity<List<InventoryDTO>> getAllInventory() {
+        return ResponseEntity.ok(inventoryService.getAllInventory());
+    }
+
     @PostMapping
     public ResponseEntity<InventoryDTO> addInventory(
             @Valid @RequestBody InventoryDTO dto,

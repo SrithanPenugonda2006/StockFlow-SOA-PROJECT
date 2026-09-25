@@ -12,6 +12,7 @@ import {
   Building2,
   Globe,
   Package,
+  Trash2,
 } from 'lucide-react';
 
 import { categoryBrandApi } from '../../api/categoryBrandApi';
@@ -71,6 +72,11 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = ({
   });
 
   const [formSubmitting, setFormSubmitting] = useState(false);
+  const [deletingCategory, setDeletingCategory] = useState<CategoryItem | null>(null);
+  const [deletingBrand, setDeletingBrand] = useState<BrandItem | null>(null);
+  const [deleteError, setDeleteError] = useState<string>("");
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
   const [formError, setFormError] = useState('');
 
   // ------------------------------------------------------------
@@ -270,11 +276,34 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = ({
 
       await fetchAllData();
     } catch (err: any) {
-      setFormError(
-        err?.response?.data?.message ||
-        err?.message ||
-        'Failed to save category.'
-      );
+      if (!err?.response) {
+        setFormError("Network or server connection error. Please try again.");
+      } else {
+        const status = err.response.status;
+        const data = err.response.data;
+        if (status === 409) {
+          setFormError(typeof data?.message === "string" ? data.message : "Category '" + name + "' already exists.");
+        } else if (status === 400) {
+          if (typeof data?.message === "string") {
+            setFormError(data.message);
+          } else if (typeof data?.message === "object" && data.message !== null) {
+            const firstErr = Object.values(data.message)[0];
+            setFormError(typeof firstErr === "string" ? firstErr : "Invalid category details.");
+          } else {
+            setFormError("Invalid category details.");
+          }
+        } else if (status === 401) {
+          setFormError("Your session has expired. Please sign in again.");
+        } else if (status === 403) {
+          setFormError("You do not have permission to create categories.");
+        } else if (status === 404) {
+          setFormError(typeof data?.message === "string" ? data.message : "Category not found.");
+        } else if (status === 500) {
+          setFormError("Unable to create the category. Please try again.");
+        } else {
+          setFormError(typeof data?.message === "string" ? data.message : err?.message || "Failed to save category.");
+        }
+      }
     } finally {
       setFormSubmitting(false);
     }
@@ -351,13 +380,115 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = ({
 
       await fetchAllData();
     } catch (err: any) {
-      setFormError(
-        err?.response?.data?.message ||
-        err?.message ||
-        'Failed to save brand.'
-      );
+      if (!err?.response) {
+        setFormError("Network or server connection error. Please try again.");
+      } else {
+        const status = err.response.status;
+        const data = err.response.data;
+        if (status === 409) {
+          setFormError(typeof data?.message === "string" ? data.message : "Brand '" + name + "' already exists.");
+        } else if (status === 400) {
+          if (typeof data?.message === "string") {
+            setFormError(data.message);
+          } else if (typeof data?.message === "object" && data.message !== null) {
+            const firstErr = Object.values(data.message)[0];
+            setFormError(typeof firstErr === "string" ? firstErr : "Invalid brand details.");
+          } else {
+            setFormError("Invalid brand details.");
+          }
+        } else if (status === 401) {
+          setFormError("Your session has expired. Please sign in again.");
+        } else if (status === 403) {
+          setFormError("You do not have permission to create brands.");
+        } else if (status === 404) {
+          setFormError(typeof data?.message === "string" ? data.message : "Brand not found.");
+        } else if (status === 500) {
+          setFormError("Unable to create the brand. Please try again.");
+        } else {
+          setFormError(typeof data?.message === "string" ? data.message : err?.message || "Failed to save brand.");
+        }
+      }
     } finally {
       setFormSubmitting(false);
+    }
+  };
+
+
+  // ------------------------------------------------------------
+  // DELETE HANDLERS
+  // ------------------------------------------------------------
+
+  const handleOpenDeleteCategory = (category: CategoryItem) => {
+    setDeletingCategory(category);
+    setDeleteError("");
+  };
+
+  const handleConfirmDeleteCategory = async () => {
+    if (!deletingCategory) return;
+    setIsDeleting(true);
+    setDeleteError("");
+
+    try {
+      await categoryBrandApi.deleteCategory(deletingCategory.id);
+      setDeletingCategory(null);
+      await fetchAllData();
+    } catch (err: any) {
+      if (!err?.response) {
+        setDeleteError("Network or server connection error. Please try again.");
+      } else {
+        const status = err.response.status;
+        const data = err.response.data;
+        if (status === 409) {
+          setDeleteError(typeof data?.message === "string" ? data.message : `Category '${deletingCategory.name}' cannot be deleted because products are assigned to it.`);
+        } else if (status === 403) {
+          setDeleteError("You do not have permission to delete categories.");
+        } else if (status === 404) {
+          setDeleteError("Category no longer exists.");
+          setDeletingCategory(null);
+          await fetchAllData();
+        } else {
+          setDeleteError(typeof data?.message === "string" ? data.message : err?.message || "Failed to delete category.");
+        }
+      }
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleOpenDeleteBrand = (brand: BrandItem) => {
+    setDeletingBrand(brand);
+    setDeleteError("");
+  };
+
+  const handleConfirmDeleteBrand = async () => {
+    if (!deletingBrand) return;
+    setIsDeleting(true);
+    setDeleteError("");
+
+    try {
+      await categoryBrandApi.deleteBrand(deletingBrand.id);
+      setDeletingBrand(null);
+      await fetchAllData();
+    } catch (err: any) {
+      if (!err?.response) {
+        setDeleteError("Network or server connection error. Please try again.");
+      } else {
+        const status = err.response.status;
+        const data = err.response.data;
+        if (status === 409) {
+          setDeleteError(typeof data?.message === "string" ? data.message : `Brand '${deletingBrand.name}' cannot be deleted because products are assigned to it.`);
+        } else if (status === 403) {
+          setDeleteError("You do not have permission to delete brands.");
+        } else if (status === 404) {
+          setDeleteError("Brand no longer exists.");
+          setDeletingBrand(null);
+          await fetchAllData();
+        } else {
+          setDeleteError(typeof data?.message === "string" ? data.message : err?.message || "Failed to delete brand.");
+        }
+      }
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -612,7 +743,7 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = ({
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-end border-t border-[#E5E5E5] pt-3">
+                    <div className="flex items-center justify-end gap-2 border-t border-[#E5E5E5] pt-3">
                       <button
                         type="button"
                         onClick={() =>
@@ -622,6 +753,17 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = ({
                       >
                         <Edit2 className="h-3.5 w-3.5 text-[#000000]" />
                         Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleOpenDeleteCategory(category)
+                        }
+                        className="flex items-center gap-1.5 rounded-lg border border-[#D4D4D4] bg-[#FFFFFF] px-3 py-1.5 text-xs font-semibold text-[#262626] transition-colors hover:bg-[#111111] hover:text-[#FFFFFF] cursor-pointer"
+                        title={category.productCount > 0 ? `Cannot delete category with ${category.productCount} products` : "Delete Category"}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Delete
                       </button>
                     </div>
                   </div>
@@ -749,16 +891,27 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = ({
                       )}
                     </div>
 
-                    <div className="flex items-center justify-end border-t border-gray-200 pt-3">
+                    <div className="flex items-center justify-end gap-2 border-t border-gray-200 pt-3">
                       <button
                         type="button"
                         onClick={() =>
                           handleOpenEditBrand(brand)
                         }
-                        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-[#F7F8FA] px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-[#F7F8FA] px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
                       >
                         <Edit2 className="h-3.5 w-3.5 text-[#666666]" />
                         Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleOpenDeleteBrand(brand)
+                        }
+                        className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-[#F7F8FA] px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-[#111111] hover:text-white cursor-pointer"
+                        title={brand.productCount > 0 ? `Cannot delete brand with ${brand.productCount} products` : "Delete Brand"}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Delete
                       </button>
                     </div>
                   </div>
@@ -1050,6 +1203,123 @@ export const CategoriesBrandsView: React.FC<CategoriesBrandsViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* DELETE CATEGORY CONFIRMATION MODAL */}
+      {deletingCategory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm">
+          <div className="my-8 w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b border-gray-200 bg-[#F7F8FA] p-6">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl border border-gray-200 bg-white p-2.5 text-[#111111]">
+                  <Trash2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Category?</h3>
+                  <p className="text-xs text-gray-500">Confirm removal of category classification.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDeletingCategory(null)}
+                className="rounded-xl p-2 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-900 cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 p-6">
+              {deleteError && (
+                <div className="flex items-center gap-2 rounded-xl border border-gray-300 bg-gray-100 p-3.5 text-xs text-gray-900">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{deleteError}</span>
+                </div>
+              )}
+
+              <p className="text-sm text-gray-700">
+                Are you sure you want to delete <strong className="text-gray-900">&quot;{deletingCategory.name}&quot;</strong>? This action cannot be undone.
+              </p>
+
+              <div className="flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setDeletingCategory(null)}
+                  className="rounded-xl border border-gray-200 bg-[#F7F8FA] px-4 py-2.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={isDeleting}
+                  onClick={handleConfirmDeleteCategory}
+                  className="flex items-center gap-2 rounded-xl bg-[#111111] px-5 py-2.5 text-xs font-semibold text-white transition-all hover:bg-[#2A2A2A] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                >
+                  {isDeleting && <RefreshCw className="h-3.5 w-3.5 animate-spin" />}
+                  Delete Category
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* DELETE BRAND CONFIRMATION MODAL */}
+      {deletingBrand && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4 backdrop-blur-sm">
+          <div className="my-8 w-full max-w-md overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b border-gray-200 bg-[#F7F8FA] p-6">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl border border-gray-200 bg-white p-2.5 text-[#111111]">
+                  <Trash2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Delete Brand?</h3>
+                  <p className="text-xs text-gray-500">Confirm removal of brand partner.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDeletingBrand(null)}
+                className="rounded-xl p-2 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-900 cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 p-6">
+              {deleteError && (
+                <div className="flex items-center gap-2 rounded-xl border border-gray-300 bg-gray-100 p-3.5 text-xs text-gray-900">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{deleteError}</span>
+                </div>
+              )}
+
+              <p className="text-sm text-gray-700">
+                Are you sure you want to delete <strong className="text-gray-900">&quot;{deletingBrand.name}&quot;</strong>? This action cannot be undone.
+              </p>
+
+              <div className="flex items-center justify-end gap-3 border-t border-gray-200 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setDeletingBrand(null)}
+                  className="rounded-xl border border-gray-200 bg-[#F7F8FA] px-4 py-2.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={isDeleting}
+                  onClick={handleConfirmDeleteBrand}
+                  className="flex items-center gap-2 rounded-xl bg-[#111111] px-5 py-2.5 text-xs font-semibold text-white transition-all hover:bg-[#2A2A2A] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                >
+                  {isDeleting && <RefreshCw className="h-3.5 w-3.5 animate-spin" />}
+                  Delete Brand
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

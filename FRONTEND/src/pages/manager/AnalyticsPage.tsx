@@ -1,3 +1,4 @@
+import { formatCurrency } from '../../utils/formatters';
 import React, { useState, useEffect } from 'react';
 import {
   BarChart3,
@@ -93,7 +94,7 @@ export const AnalyticsPage: React.FC = () => {
             </div>
           </div>
           <p className="text-2xl font-bold text-gray-900 mt-2">
-            ₹{totalValuation.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(totalValuation)}
           </p>
         </div>
 
@@ -192,7 +193,7 @@ export const AnalyticsPage: React.FC = () => {
 
                   <div className="text-right">
                     <span className="font-bold text-gray-900 text-sm block">
-                      ₹{data.value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                      {formatCurrency(data.value)}
                     </span>
                     <span className="text-[10px] text-[#666666] font-mono">{pct}% of Total Portfolio</span>
                   </div>

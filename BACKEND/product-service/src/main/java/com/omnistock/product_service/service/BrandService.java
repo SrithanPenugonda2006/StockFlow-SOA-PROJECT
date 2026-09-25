@@ -3,9 +3,13 @@ package com.omnistock.product_service.service;
 import com.omnistock.product_service.dto.BrandDTO;
 import com.omnistock.product_service.entity.Brand;
 import com.omnistock.product_service.exception.ResourceNotFoundException;
+import com.omnistock.product_service.exception.BrandAlreadyExistsException;
+import com.omnistock.product_service.exception.BrandInUseException;
 import com.omnistock.product_service.repository.BrandRepository;
 import com.omnistock.product_service.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class BrandService {
+    private static final Logger log = LoggerFactory.getLogger(BrandService.class);
 
     @Autowired
     private BrandRepository brandRepository;
@@ -54,7 +59,7 @@ public class BrandService {
     public BrandDTO createBrand(BrandDTO dto) {
         String cleanName = dto.getName().trim();
         if (brandRepository.existsByNameIgnoreCase(cleanName)) {
-            throw new IllegalArgumentException("Brand with name '" + cleanName + "' already exists.");
+            throw new BrandAlreadyExistsException("Brand '" + cleanName + "' already exists.");
         }
 
         Brand brand = new Brand(cleanName, dto.getCountry() != null ? dto.getCountry().trim() : null, dto.getStatus());
@@ -78,7 +83,7 @@ public class BrandService {
 
         String cleanName = dto.getName().trim();
         if (!brand.getName().equalsIgnoreCase(cleanName) && brandRepository.existsByNameIgnoreCase(cleanName)) {
-            throw new IllegalArgumentException("Brand with name '" + cleanName + "' already exists.");
+            throw new BrandAlreadyExistsException("Brand '" + cleanName + "' already exists.");
         }
 
         brand.setName(cleanName);
@@ -93,5 +98,20 @@ public class BrandService {
         res.setCreatedAt(updated.getCreatedAt());
         res.setUpdatedAt(updated.getUpdatedAt());
         return res;
+    }
+
+    @Transactional
+    public void deleteBrand(Long id) {
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Brand not found with id: " + id));
+
+        long productCount = productRepository.countByBrandIgnoreCase(brand.getName());
+        if (productCount > 0) {
+            log.warn("Brand deletion blocked (in use): id={}, name={}, productCount={}", id, brand.getName(), productCount);
+            throw new BrandInUseException("Brand '" + brand.getName() + "' cannot be deleted because " + productCount + (productCount == 1 ? " product is assigned to it." : " products are assigned to it."));
+        }
+
+        brandRepository.delete(brand);
+        log.info("Brand deleted successfully: id={}, name={}", id, brand.getName());
     }
 }

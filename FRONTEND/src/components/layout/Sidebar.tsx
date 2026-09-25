@@ -59,7 +59,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   // Management section items
   const managementItems = [
     { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-    { label: "Products", path: "/products", icon: Package },
+    { label: "Products", path: "/manager/products", icon: Package },
     { label: "Warehouses", path: "/warehouses", icon: WarehouseIcon },
     { label: "Inventory", path: "/inventory", icon: Boxes },
     { label: "Stock Operations", path: "/stock-operations", icon: Boxes },
